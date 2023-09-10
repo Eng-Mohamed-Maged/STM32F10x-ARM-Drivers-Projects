@@ -1,9 +1,9 @@
 /*******************************************************/
 /* Author    :  Mohamed Maged                          */
 /* Date      :  11 September 2023                      */
-/* Version   :  V02									   */
+/* Version   :  V02									                           */
 /* LOG       :  V01  -> Initial Creation               */
-/*      		V02  -> Add unsigned types             */
+/*      		      V02  -> Add unsigned types             */
 /*******************************************************/
  #ifndef STD_TYPES_H
  #define STD_TYPES_H
