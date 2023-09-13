@@ -1,7 +1,9 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V01                                                           */
-/*   Date      : 12 September  2023                                            */
+/*   Version   : V02                                                           */
+/*   Date      : 14 September  2023                                            */
+/*   Logs      : V01 : Initial Creation                                        */
+/*               V02 : Updating MGPIO_voidSetPortValue / Direction Functions   */                 */
 /*******************************************************************************/
 
 #include "STD_TYPES.h"
@@ -172,12 +174,12 @@ void MGPIO_voidSetPortDirection(u8 Copy_u8Port ,u32 Copy_u32Mode )
 			  /* First Clear the 8 Low Pins               */
 			  GPIOA_CRL &= 0x00000000 ;
 			  /* Set the 16 Low Bits for selected PORT    */
-			  GPIOA_CRL |= (( Copy_u32Mode ) << ( 0 ));
+			  GPIOA_CRL =  Copy_u32Mode;
 			  
 			  /* First Clear the 8 High Pins              */
 			  GPIOA_CRH &= 0x00000000 ;
 			  /* Set the 16 High Bits for selected PORT   */
-			  GPIOA_CRH |= (( Copy_u32Mode ) << ( 0 ));
+			  GPIOA_CRH = Copy_u32Mode;
 		}break;
 
 
@@ -186,59 +188,91 @@ void MGPIO_voidSetPortDirection(u8 Copy_u8Port ,u32 Copy_u32Mode )
 			  /* First Clear the 8 Low Pins               */
 			  GPIOB_CRL &= 0x00000000 ;
 			  /* Set the 16 Low Bits for selected PORT    */
-			  GPIOB_CRL |= (( Copy_u32Mode ) << ( 0 ));
+			  GPIOB_CRL = Copy_u32Mode;
 			  
 			  /* First Clear the 8 High Pins              */
 			  GPIOB_CRH &= 0x00000000 ; 
 			  /* Set the 16 High Bits for selected PORT   */
-			  GPIOB_CRH |= (( Copy_u32Mode ) << ( 0 ));
+			  GPIOB_CRH = Copy_u32Mode;
 		}break;
 		case GPIOC:
 		{
 			  /* First Clear the 8 Low Pins               */
 			  GPIOC_CRL &= 0x00000000 ;
 			  /* Set the 16 Low Bits for selected PORT    */
-			  GPIOC_CRL |= (( Copy_u32Mode ) << ( 0 ));
+			  GPIOC_CRL = Copy_u32Mode;
 			  
 			  /* First Clear the 8 High Pins              */
 			  GPIOC_CRH &= 0x00000000 ;
 			  /* Set the 16 High Bits for selected PORT   */
-			  GPIOC_CRH |= (( Copy_u32Mode ) << ( 0 ));
+			  GPIOC_CRH = Copy_u32Mode;
 		}break;
 		default : break;
 	}
 }
 
-void MGPIO_voidSetPortValue(u8 Copy_u8Port ,u16 Copy_u16Value )
+void MGPIO_voidSetPortValue(u8 Copy_u8Port ,u32 Copy_u32Value )
 {
 	switch(Copy_u8Port)
 	{
 		case GPIOA:
 		{
-			  /* Clear the 16 Bits */
-			  GPIOA_ODR &= 0x0000;
-			  /* Set the 16 Bits */
-			  GPIOA_ODR |= ( Copy_u16Value ) << ( 0 );
+			/* If the value of the port is High */
+			if(Copy_u32Value == GPIO_PORT_HIGH )
+			{
+			  // Set the whole port to high 
+			  GPIOA_ODR = GPIO_PORT_HIGH ;
+			}
+			/* If the value of the port is LOW */
+		    else if(Copy_u32Value == GPIO_PORT_LOW )
+			{
+			  // Set the whole port to LOW 
+			  GPIOA_ODR = GPIO_PORT_LOW ;
+			}
 		}break;
 
 
 		case GPIOB:
 		{
-			  /* Clear the 16 Bits */
-			  GPIOB_ODR &= 0x0000;
-			  /* Set the 16 Bits */
-			  GPIOB_ODR |= ( Copy_u16Value ) << ( 0 );
+			/* If the value of the port is High */
+			if(Copy_u32Value == GPIO_PORT_HIGH )
+			{
+			  // Set the whole port to high 
+			  GPIOB_ODR = GPIO_PORT_HIGH ;
+			}
+			/* If the value of the port is LOW */
+		    else if(Copy_u32Value == GPIO_PORT_LOW )
+			{
+			  // Set the whole port to LOW 
+			  GPIOB_ODR = GPIO_PORT_LOW ;
+			}
 		}break;
 		case GPIOC:
 		{
-			  /* Clear the 16 Bits */
-			  GPIOB_ODR &= 0x0000;
-			  /* Set the 16 Bits */
-			  GPIOB_ODR |= ( Copy_u16Value ) << ( 0 );
+			/* If the value of the port is High */
+			if(Copy_u32Value == GPIO_PORT_HIGH )
+			{
+			  // Set the whole port to high 
+			  GPIOC_ODR = GPIO_PORT_HIGH ;
+			}
+			/* If the value of the port is LOW */
+		    else if(Copy_u32Value == GPIO_PORT_LOW )
+			{
+			  // Set the whole port to LOW 
+			  GPIOC_ODR = GPIO_PORT_LOW ;
+			}
 		}break;
 		default : break;
 	}
 }
+
+// BSRR : is 32 bits register has lower instruction numbers that ODR [FASTER]
+//        # in the low  16 bits : Write '1' to set bit    - Write '0' has no effect
+//        # in the High 16 bits : Write '1' to clear bit  - Write '0' has no effect
+
+// BRR : is 32 bits register has lower instruction numbers that ODR [FASTER]
+//        # in the low  16 bits : Write '1' to clear bit    - Write '0' has no effect
+//        # in the High 16 bits : Write '1' to set bit      - Write '0' has no effect
 
 void MGPIO_voidSetOrResetPinValue_BSRR_BRR(u8 Copy_u8Port , u8 Copy_u8Pin ,u8 Copy_u8Value )
 {
@@ -304,59 +338,14 @@ void MGPIO_voidSetOrResetPinValue_BSRR_BRR(u8 Copy_u8Port , u8 Copy_u8Pin ,u8 Co
 	}
 }
 
+// TODO: 
+// LCKR : is 32 bits register to lock the pins
 
 
 /*
 void MGPIO_voidPinLock_LCKR(u8 Copy_u8Port , u8 Copy_u8Pin ,u8 Copy_u8Value )
 {
-	switch(Copy_u8Port)
-	{
-		case GPIOA:
-		{
-			 If the value is High
-			if(Copy_u8Value == GPIO_HIGH )
-			{
-			   Set Pin
-			  GPIOA_BSRR = (1 << Copy_u8Pin)
-			}
-			 If the value is Low
-		    else if(Copy_u8Value == GPIO_LOW )
-			{
-			   Reset Pin
-			  GPIOA_BSRR = (1 << (Copy_u8Pin + 16))
-			}
-		}break;
 	
-		case GPIOB:
-		{
-			 If the value is High
-			if(Copy_u8Value == GPIO_HIGH )
-			{
-			   Set Pin
-			  GPIOB_BSRR = (1 << Copy_u8Pin)
-			}
-			 If the value is Low
-		    else if(Copy_u8Value == GPIO_LOW )
-			{
-			   Reset Pin
-			  GPIOB_BSRR = (1 << (Copy_u8Pin + 16))
-			}
-		}break;
-		case GPIOC:
-		{
-			 If the value is High
-			if(Copy_u8Value == GPIO_HIGH )
-			{
-			   Set Pin
-			  GPIOC_BSRR = (1 << Copy_u8Pin)
-			}
-			 If the value is Low
-		    else if(Copy_u8Value == GPIO_LOW )
-			{
-			   Reset Pin
-			  GPIOC_BSRR = (1 << (Copy_u8Pin + 16))
-			}
-		}break;
-		default : break;
-	}
-} */
+	
+} 
+*/

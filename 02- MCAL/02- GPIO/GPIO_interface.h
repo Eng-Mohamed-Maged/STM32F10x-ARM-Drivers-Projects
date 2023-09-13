@@ -1,7 +1,9 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V01                                                           */
-/*   Date      : 12 September  2023                                            */
+/*   Version   : V02                                                           */
+/*   Date      : 14 September  2023                                            */
+/*   Logs      : V01 : Initial Creation                                        */
+/*               V02 : Adding [GPIO_PORT_HIGH - GPIO_PORT_LOW]                 */
 /*******************************************************************************/
 #ifndef	GPIO_INTERFACE_H
 #define GPIO_INTERFACE_H
@@ -30,6 +32,8 @@
 /***************************************************/	 			               
 #define   GPIO_LOW 		                  0
 #define   GPIO_HIGH 		              1
+#define   GPIO_PORT_HIGH                  0x0000FFFF
+#define   GPIO_PORT_LOW                   0x00000000
 /*******************   -OUTPUT-  *******************/
 /*  For 10 Mhz Speed  */                  
 #define   OUTPUT_SPEED_10MHZ_PP           0b0001
