@@ -3,7 +3,7 @@
 /*   Version   : V02                                                           */
 /*   Date      : 14 September  2023                                            */
 /*   Logs      : V01 : Initial Creation                                        */
-/*               V02 : Updating MGPIO_voidSetPortValue / Direction Functions   */                 */
+/*               V02 : Updating MGPIO_voidSetPortValue / Direction Functions   */                 
 /*******************************************************************************/
 
 #include "STD_TYPES.h"
