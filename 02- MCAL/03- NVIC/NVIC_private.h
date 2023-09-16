@@ -1,34 +1,62 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V01                                                           */
-/*   Date      : 15 September 2023                                             */
+/*   Version   : V02                                                           */
+/*   Date      : 16 September 2023                                             */
+/*   Logs      : V01 : Initial Creation                                        */
+/*               V02 : Update all NVIC Driver to make it more professional     */
 /*******************************************************************************/
 #ifndef	NVIC_PRIVATE_H
 #define NVIC_PRIVATE_H
 
 
-#define 	NVIC_ISER0                 *((u32*)0xE000E100)
-#define 	NVIC_ISER1	               *((u32*)0xE000E104)
+/*
+NOTE: 
+The address of NVIC_ISER[2] = 0xE000E108
+The address of NVIC_ICER[0] = 0xE000E180
+#So you should put (0xE000E180 - 0xE000E10B) = 116 Bytes = 29 array locations * 4 as a reserved bits in struct
 
-#define 	NVIC_ICER0                 *((u32*)0xE000E180)
-#define 	NVIC_ICER1	               *((u32*)0xE000E184)
+The address of NVIC_IABR[2] = 0xE000E308
+The address of NVIC_IPR[0]  = 0xE000E400
+#So you should put (0xE000E400 - 0xE000E30B) = 245 Bytes = 61 array locations * 4 as a reserved bits in struct
 
-#define 	NVIC_ISPR0	               *((u32*)0xE000E200)
-#define 	NVIC_ISPR1	               *((u32*)0xE000E204)
 
-#define 	NVIC_ICPR0	               *((u32*)0xE000E280)
-#define 	NVIC_ICPR1	               *((u32*)0xE000E284)
 
-#define 	NVIC_IABR0	               *((volatile u32*)0xE000E300)
-#define 	NVIC_IABR1	               *((volatile u32*)0xE000E304)
+*/
 
-#define     NVIC_IPR					((u8*)0xE000E400)
+/* Struct for the NVIC regsiter mapping */
+typedef struct
+{
+	
+     volatile u32 ISER[3]    ;   /* Interrupt Set Enable Registers                     */
+	 volatile u32 RESERVED0[29]   ;   /* 116 Bytes reserved                                 */
+     volatile u32 ICER[3]    ;   /* Interrupt Clear Enable Registers                   */
+	 volatile u32 RESERVED1[29]   ;   /* 116 Bytes reserved                                 */
+     volatile u32 ISPR[3]    ;   /* Interrupt Set Pending Registers                    */             
+	 volatile u32 RESERVED2[29]   ;   /* 116 Bytes reserved                                 */  
+     volatile u32 ICPR[3]    ;   /* Interrupt Clear Pending Registers                  */               
+	 volatile u32 RESERVED3[29]   ;	  /* 116 Bytes reserved                                 */
+     volatile u32 IABR[3]    ;   /* Interrupt Active Bit Registers                     */            
+     volatile u32 RESERVED4[61]   ;	  /* 245 Bytes reserved                                 */   
+	 volatile u8  IPR[80]     ;   /* Interrupt Priority registers                       */
+	
+}NVIC_t;
 
-#define     MNVIC_GROUP_16_SUB_0       0x05FA0300
-#define     MNVIC_GROUP_8_SUB_2        0x05FA0400
-#define     MNVIC_GROUP_4_SUB_4        0x05FA0500
-#define     MNVIC_GROUP_2_SUB_8        0x05FA0600
-#define     MNVIC_GROUP_0_SUB_16       0x05FA0700
+/* Register defintions  */
+#define   NVIC_BASE_ADDRESS             0xE000E100
+#define   SCB_BASE_ADDRESS              0xE000ED0C
+#define   NVIC                          ((volatile NVIC_t *)NVIC_BASE_ADDRESS)
+#define   NVIC_STIR                    *((volatile u32    *)NVIC_BASE_ADDRESS + 0xE00 )
+#define	  SCB_AIRCR                    *((volatile u32    *)SCB_BASE_ADDRESS)
+
+
+// Group priority options //
+// Note:: These Macros including [VECTKEY = 0x05FA0000] 
+#define     MNVIC_GROUP_16_SUB_0        0x05FA0300
+#define     MNVIC_GROUP_8_SUB_2         0x05FA0400
+#define     MNVIC_GROUP_4_SUB_4         0x05FA0500
+#define     MNVIC_GROUP_2_SUB_8         0x05FA0600
+#define     MNVIC_GROUP_0_SUB_16        0x05FA0700
+
 
 
 

@@ -1,7 +1,9 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V01                                                           */
-/*   Date      : 15 September 2023                                             */
+/*   Version   : V02                                                           */
+/*   Date      : 16 September 2023                                             */
+/*   Logs      : V01 : Initial Creation                                        */
+/*               V02 : Update all NVIC Driver to make it more professional     */
 /*******************************************************************************/
 
 #include  "STD_TYPES.h"
@@ -11,56 +13,173 @@
 #include  "NVIC_private.h"
 #include  "NVIC_config.h"
 
-
-
+//-------------------------------------------------------------------------------------
+/*
+ MNVIC_voidInit - > Initialize the periority system (determine the number of group priorities and sub priorties) 
+*/
 void MNVIC_voidInit(void)
 {
-	/* NOTE : USING SCB peripheral inside NVIC isn't CORRECT  */
-    #define	 SCB_AIRCR   *((u32*)0xE000ED0C)
-	SCB_AIRCR = MNVIC_GROUP_SUB_DISTRIBUTION ;
-}
-
-void MNVIC_voidSetPriority(u8 Copy_u8PeripheralIdx , u8 Copy_u8Priority)
-{
-	/* Number of peripheral is 59 */
-	if(Copy_u8PeripheralIdx <60)
-	{
-		NVIC_IPR[Copy_u8PeripheralIdx] = Copy_u8Priority ;
-	}
-	else
-	{
-		/* Return Error */
-	}
-
-}
-
-
-void MNVIC_voidEnableInterrupt (u8 Copy_u8InterruptNum)
-{
-	/* From peripheral 0 to 31 */
-	if(Copy_u8InterruptNum <=31)
-	{
-		/* Not optimized */
-	//  SET_BIT(NVIC_ISER0,Copy_u8InterruptNum);
-		/* Modification */
-		NVIC_ISER0 = ( 1 << Copy_u8InterruptNum);
-	}
-	/* From peripheral 32 to 59 */
-	else if(Copy_u8InterruptNum <=59)
-	{
-		/* To start from 0 */
-		Copy_u8InterruptNum -= 32 ;
-		/* Not optimized */
-	//  SET_BIT(NVIC_ISER1,Copy_u8InterruptNum);
-		/* Modification */
-	    NVIC_ISER1 = ( 1 << Copy_u8InterruptNum);
-	}
-	else
-	{
-		/* Return Error */
-	}
+	/* Choose configurations */	
+	#if   MNVIC_GROUP_SUB_DISTRIBUTION == MNVIC_GROUP_16_SUB_0
+		SCB_AIRCR = MNVIC_GROUP_SUB_DISTRIBUTION ;
+		
+	#elif MNVIC_GROUP_SUB_DISTRIBUTION == MNVIC_GROUP_8_SUB_2
+		SCB_AIRCR = MNVIC_GROUP_SUB_DISTRIBUTION ;
+		
+	#elif MNVIC_GROUP_SUB_DISTRIBUTION == MNVIC_GROUP_4_SUB_4
+		SCB_AIRCR = MNVIC_GROUP_SUB_DISTRIBUTION ;
+		
+	#elif MNVIC_GROUP_SUB_DISTRIBUTION == MNVIC_GROUP_2_SUB_8
+		SCB_AIRCR = MNVIC_GROUP_SUB_DISTRIBUTION ;
+		
+	#elif MNVIC_GROUP_SUB_DISTRIBUTION == MNVIC_GROUP_0_SUB_16
+		SCB_AIRCR = MNVIC_GROUP_SUB_DISTRIBUTION ;
 	
+	#else 
+		#error (" Configuration error ")
+	#endif
 }
+//-------------------------------------------------------------------------------------
+
+/* 
+  * MNVIC_voidEnableInterrupt - > Enable a specific external interrupt   
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59
+*/
+void MNVIC_voidEnableInterrupt       (NVIC_IRQn_t Copy_IRQn)
+{
+	/* Devided by 32 to write to the right regsiter index         */
+	/* Anding (Copy_IRQn) with 31 so value will always be under 32 */
+	u8 reg_index = Copy_IRQn / 32 ;
+	NVIC->ISER[reg_index] = ( 1 << (Copy_IRQn & 31));
+}
+//-------------------------------------------------------------------------------------
+
+/* 
+  * MNVIC_voidDisableInterrupt - > Disable a specific external interrupt   
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59
+*/
+void MNVIC_voidDisableInterrupt      (NVIC_IRQn_t Copy_IRQn)
+{
+	/* Devided by 32 to write to the right regsiter index         */
+	/* Anding (Copy_IRQn) with 31 so value will always be under 32 */
+	u8 reg_index = Copy_IRQn / 32 ;
+	NVIC->ICER[reg_index] = ( 1 << (Copy_IRQn & 31));
+}
+//-------------------------------------------------------------------------------------
+
+
+/* 
+  * MNVIC_voidSetPendingFlag - > set pending flag for a specific external interrupt   
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59
+*/
+
+void MNVIC_voidSetPendingFlag        (NVIC_IRQn_t Copy_IRQn)
+{
+	/* Devided by 32 to write to the right regsiter index         */
+	/* Anding (Copy_IRQn) with 31 so value will always be under 32 */
+	u8 reg_index = Copy_IRQn / 32 ;
+	NVIC->ISPR[reg_index] = ( 1 << (Copy_IRQn & 31));	
+}
+
+//-------------------------------------------------------------------------------------
+
+/* 
+  * MNVIC_voidClearPendingFlag - > Clear pending flag for a specific external interrupt   
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59
+*/
+
+void MNVIC_voidClearPendingFlag      (NVIC_IRQn_t Copy_IRQn)
+{
+	/* Devided by 32 to write to the right regsiter index         */
+	/* Anding (Copy_IRQn) with 31 so value will always be under 32 */
+	u8 reg_index = Copy_IRQn / 32 ;
+	NVIC->ICPR[reg_index] = ( 1 << (Copy_IRQn & 31));	
+}
+//-------------------------------------------------------------------------------------
+
+/* 
+  * MNVIC_u8GetPendingFlag - > Get the pending flag state    
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59
+  * o/p : (u8) 0 or 1
+*/
+
+u8 MNVIC_u8GetPendingFlag            (NVIC_IRQn_t Copy_IRQn)
+{
+	u8 reg_index = Copy_IRQn / 32 ;
+	u8 Local_u8Result = GET_BIT(NVIC->ISPR[reg_index],(Copy_IRQn & 31));
+	return Local_u8Result;
+
+}
+//-------------------------------------------------------------------------------------
+
+/* 
+  * MNVIC_u8GetActiveFlag - > Get the Active flag state    
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59
+  * o/p : (u8) 0 or 1
+*/
+
+
+u8   MNVIC_u8GetActiveFlag           (NVIC_IRQn_t Copy_IRQn)
+{
+	u8 reg_index = Copy_IRQn / 32 ;
+	u8 Local_u8Result = GET_BIT(NVIC->IABR[reg_index],(Copy_IRQn & 31));
+	return Local_u8Result;	
+}
+//-------------------------------------------------------------------------------------
+
+/* 
+  * MNVIC_voidSetPriority - > Set periority for a specific external interrupt   
+  * i/p : Interrupt number (NVIC_IRQn_t) 0:59  /  Interrupt periority (u8) 0:15
+
+NOTE:: 
+	Each priority field holds a priority value, 0-255. The lower the value, 
+	the greater the priority of the corresponding interrupt. The processor 
+	implements only bits[7:4] of each field 
+	** That is why i shift (copy_u8Priority << 4) by 4 **
+*/
+void MNVIC_voidSetPriority (NVIC_IRQn_t Copy_IRQn, u8 Copy_u8Priority)
+{
+	/* Writing into the four bit the periority */
+	NVIC->IPR[Copy_IRQn] = (copy_u8Priority << 4);	
+}
+	
+//-------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*******************************
+
+
 
 void MNVIC_voidDisableInterrupt (u8 Copy_u8InterruptNum)
 {
@@ -88,6 +207,25 @@ void MNVIC_voidDisableInterrupt (u8 Copy_u8InterruptNum)
 	}
 	
 }
+
+
+void MNVIC_voidSetPriority(u8 Copy_u8PeripheralIdx , u8 Copy_u8Priority)
+{
+	/* Number of peripheral is 59 */
+	if(Copy_u8PeripheralIdx <60)
+	{
+		NVIC_IPR[Copy_u8PeripheralIdx] = Copy_u8Priority ;
+	}
+	else
+	{
+		/* Return Error */
+	}
+
+}
+
+
+
+
 
 void MNVIC_voidSetPendingFlag (u8 Copy_u8InterruptNum)
 {
