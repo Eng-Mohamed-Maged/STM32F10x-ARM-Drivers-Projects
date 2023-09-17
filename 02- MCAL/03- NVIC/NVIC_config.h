@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 16 September 2023                                             */
+/*   Version   : V03                                                           */
+/*   Date      : 17 September 2023                                             */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all NVIC Driver to make it more professional     */
+/*               V03 : Update MNVIC_voidSetPriority function                   */
 /*******************************************************************************/
 
 #ifndef NVIC_CONFIG_H
