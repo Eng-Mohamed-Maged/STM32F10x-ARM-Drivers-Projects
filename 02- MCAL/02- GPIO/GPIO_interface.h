@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 14 September  2023                                            */
+/*   Version   : V03                                                           */
+/*   Date      : 23 September  2023                                            */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Adding [GPIO_PORT_HIGH - GPIO_PORT_LOW]                 */
+/*               V03 : Modifications on [MGPIO_voidSetPortValue] function      */
 /*******************************************************************************/
 #ifndef	GPIO_INTERFACE_H
 #define GPIO_INTERFACE_H
@@ -84,7 +85,7 @@ void MGPIO_voidSetPinDirection(u8 Copy_u8Port  , u8 Copy_u8Pin ,u8 Copy_u8Mode )
 void MGPIO_voidSetPinValue(u8 Copy_u8Port  , u8 Copy_u8Pin ,u8 Copy_u8Value );
 u8 MGPIO_u8GetPinValue(u8 Copy_u8Port  , u8 Copy_u8Pin);
 void MGPIO_voidSetPortDirection(u8 Copy_u8Port ,u32 Copy_u32Mode );
-void MGPIO_voidSetPortValue(u8 Copy_u8Port ,u16 Copy_u16Value );
+void MGPIO_voidSetPortValue(u8 Copy_u8Port ,u32 Copy_u32Value );
 void MGPIO_voidSetOrResetPinValue_BSRR_BRR(u8 Copy_u8Port , u8 Copy_u8Pin ,u8 Copy_u8Value );
 
 #endif
