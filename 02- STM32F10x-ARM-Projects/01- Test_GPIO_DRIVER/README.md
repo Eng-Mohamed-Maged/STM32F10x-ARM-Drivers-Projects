@@ -10,6 +10,9 @@ Testing GPIO and RCC Drivers by LEDs Blinking
 # Introduction
 The STM32F10x-ARM microcontroller is a powerful and widely used microcontroller in embedded systems development. This repository aims to provide a collection of custom drivers written in C for this microcontroller, making it easier to develop applications and interact with various peripherals.
 
+# Testing Video
+
+[![IMAGE ALT TEXT HERE](https://img.shields.io/badge/youtube-%23FF0000?style=flat&logo=youtube&logoColor=white)](https://youtu.be/Jk6IEbAS3nk)
 
 # Getting Started
 To get started with using these drivers in your STM32F10x-ARM project, follow these steps:
