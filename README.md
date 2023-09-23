@@ -1,4 +1,4 @@
-# STM32F10x-ARM-Drivers
+# STM32F10x-ARM-Drivers-Projects
 This repository contains my custom drivers written in C for the STM32F10x-ARM microcontroller. These drivers provide functionality and abstraction for various peripherals and features of the STM32F10x microcontroller family.
 
 # Table of Contents
