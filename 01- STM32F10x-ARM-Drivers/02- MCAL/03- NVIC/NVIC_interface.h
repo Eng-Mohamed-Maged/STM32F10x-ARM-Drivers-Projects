@@ -1,10 +1,11 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V03                                                           */
-/*   Date      : 17 September 2023                                             */
+/*   Version   : V04                                                           */
+/*   Date      : 25 September 2023                                             */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all NVIC Driver to make it more professional     */
 /*               V03 : Update MNVIC_voidSetPriority function                   */
+/*               V04 : Group and Sub as enum                                   */
 /*******************************************************************************/
 #ifndef NVIC_INTERFACE_H
 #define	NVIC_INTERFACE_H
@@ -72,6 +73,16 @@ typedef enum {
 	DMA2_Channel3_IRQ     ,
 	DMA2_Channel4_IRQ               
 }NVIC_IRQn_t;
+
+typedef enum {
+    MNVIC_GROUP_16_SUB_0 = 0x05FA0300,       //0 bit for sub & 4 bit For group   << 0
+    MNVIC_GROUP_8_SUB_2  = 0x05FA0400,       //1 bit for sub & 3 bit For group   << 1
+    MNVIC_GROUP_4_SUB_4  = 0x05FA0500,       //2 bit for sub & 2 bit For group   << 2
+    MNVIC_GROUP_2_SUB_8  = 0x05FA0600,	     //3 bit for sub & 1 bit For group   << 3
+    MNVIC_GROUP_0_SUB_16 = 0x05FA0700		 //4 bit for sub & 0 bit For group   << 4
+}MNVIC_GROUP_SUB_t;
+
+
 //-------------------------------------------------------------------------------------
 /*
  MNVIC_voidInit - > Initialize the periority system (determine the number of group priorities and sub priorties) 
@@ -147,7 +158,7 @@ NOTE::
 	implements only bits[7:4] of each field
 	** That is why i shift (copy_u8Priority << 4) by 4 **
 */
-void MNVIC_voidSetPriority (NVIC_IRQn_t Copy_IRQn, u8 Copy_u8GroupPriority, u8 Copy_u8SubPriority , u32 Copy_u8Group );
+void MNVIC_voidSetPriority (NVIC_IRQn_t Copy_IRQn, u8 Copy_u8GroupPriority, u8 Copy_u8SubPriority , MNVIC_GROUP_SUB_t Copy_u8Group );
 //-------------------------------------------------------------------------------------
 
 #endif
