@@ -1,10 +1,11 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V03                                                           */
-/*   Date      : 17 September 2023                                             */
+/*   Version   : V04                                                           */
+/*   Date      : 25 September 2023                                             */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all NVIC Driver to make it more professional     */
 /*               V03 : Update MNVIC_voidSetPriority function                   */
+/*               V04 : Error Fixed - Modifications on MNVIC_voidSetPriority    */
 /*******************************************************************************/
 
 #include  "STD_TYPES.h"
@@ -152,14 +153,14 @@ NOTE::
 	implements only bits[7:4] of each field
 	** That is why i shift (copy_u8Priority << 4) by 4 **
 */
-void MNVIC_voidSetPriority (NVIC_IRQn_t Copy_IRQn, u8 Copy_u8GroupPriority, u8 Copy_u8SubPriority , u32 Copy_u8Group )
+void MNVIC_voidSetPriority (NVIC_IRQn_t Copy_IRQn, u8 Copy_u8GroupPriority, u8 Copy_u8SubPriority , MNVIC_GROUP_SUB_t Copy_u8Group )
 {
 	u8 Local_u8Priority = Copy_u8SubPriority | Copy_u8GroupPriority << ( (Copy_u8Group - MNVIC_GROUP_16_SUB_0) / 256 );
 	// For Core Peripheral //
 	//TODO:: 
 	
 	// For External Peripheral //
-	/* Writing into the four bit the periority */
+	/* Writing into the four bit the priority */
 	NVIC->IPR[Copy_IRQn] = (Local_u8Priority << 4);
 	
 	SCB_AIRCR = Copy_u8Group ;
@@ -167,161 +168,3 @@ void MNVIC_voidSetPriority (NVIC_IRQn_t Copy_IRQn, u8 Copy_u8GroupPriority, u8 C
 
 //-------------------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*******************************
-
-
-
-void MNVIC_voidDisableInterrupt (u8 Copy_u8InterruptNum)
-{
-	/* From peripheral 0 to 31 */
-	if(Copy_u8InterruptNum <=31)
-	{
-		/* Not optimized */
-	//  SET_BIT(NVIC_ICER0,Copy_u8InterruptNum);
-		/* Modification */
-		NVIC_ICER0 = ( 1 << Copy_u8InterruptNum);
-	}
-	/* From peripheral 32 to 59 */
-	else if(Copy_u8InterruptNum <=59)
-	{
-		/* To start from 0 */
-		Copy_u8InterruptNum -= 32 ;
-		/* Not optimized */
-	//  SET_BIT(NVIC_ICER1,Copy_u8InterruptNum);
-		/* Modification */
-	    NVIC_ICER1 = ( 1 << Copy_u8InterruptNum);
-	}
-	else
-	{
-		/* Return Error */
-	}
-
-}
-
-
-void MNVIC_voidSetPriority(u8 Copy_u8PeripheralIdx , u8 Copy_u8Priority)
-{
-	/* Number of peripheral is 59 */
-	if(Copy_u8PeripheralIdx <60)
-	{
-		NVIC_IPR[Copy_u8PeripheralIdx] = Copy_u8Priority ;
-	}
-	else
-	{
-		/* Return Error */
-	}
-
-}
-
-
-
-
-
-void MNVIC_voidSetPendingFlag (u8 Copy_u8InterruptNum)
-{
-	/* From peripheral 0 to 31 */
-	if(Copy_u8InterruptNum <=31)
-	{
-		/* Not optimized */
-	//  SET_BIT(NVIC_ISPR0,Copy_u8InterruptNum);
-		/* Modification */
-		NVIC_ISPR0 = ( 1 << Copy_u8InterruptNum);
-	}
-	/* From peripheral 32 to 59 */
-	else if(Copy_u8InterruptNum <=59)
-	{
-		/* To start from 0 */
-		Copy_u8InterruptNum -= 32 ;
-		/* Not optimized */
-	//  SET_BIT(NVIC_ISPR1,Copy_u8InterruptNum);
-		/* Modification */
-	    NVIC_ISPR1 = ( 1 << Copy_u8InterruptNum);
-	}
-	else
-	{
-		/* Return Error */
-	}
-
-}
-
-void MNVIC_voidClearPendingFlag (u8 Copy_u8InterruptNum)
-{
-	/* From peripheral 0 to 31 */
-	if(Copy_u8InterruptNum <=31)
-	{
-		/* Not optimized */
-	//  SET_BIT(NVIC_ICPR0,Copy_u8InterruptNum);
-		/* Modification */
-		NVIC_ICPR0 = ( 1 << Copy_u8InterruptNum);
-	}
-	/* From peripheral 32 to 59 */
-	else if(Copy_u8InterruptNum <=59)
-	{
-		/* To start from 0 */
-		Copy_u8InterruptNum -= 32 ;
-		/* Not optimized */
-	//  SET_BIT(NVIC_ICPR1,Copy_u8InterruptNum);
-		/* Modification */
-	    NVIC_ICPR1 = ( 1 << Copy_u8InterruptNum);
-	}
-	else
-	{
-		/* Return Error */
-	}
-
-}
-
-u8 MNVIC_u8GetActiveFlag (u8 Copy_u8InterruptNum)
-{
-	u8 Local_u8Result;
-	/* From peripheral 0 to 31 */
-	if(Copy_u8InterruptNum <=31)
-	{
-		Local_u8Result = GET_BIT(NVIC_IABR0,Copy_u8InterruptNum);
-	}
-	/* From peripheral 32 to 59 */
-	else if(Copy_u8InterruptNum <=59)
-	{
-		/* To start from 0 */
-		Copy_u8InterruptNum -= 32 ;
-		Local_u8Result = GET_BIT(NVIC_IABR1,Copy_u8InterruptNum);
-	}
-	else
-	{
-		/* Return Error */
-	}
-
-	return Local_u8Result ;
-}
