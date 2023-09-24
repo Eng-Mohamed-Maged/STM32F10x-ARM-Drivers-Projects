@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 17 September 2023                                             */
+/*   Version   : V03                                                           */
+/*   Date      : 25 September 2023                                             */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all EXTI Driver with enum configurations         */
+/*               V03 : Warnning Fixed "#else - #endif"                         */
 /*******************************************************************************/
 
 #include  "STD_TYPES.h"
@@ -31,7 +32,8 @@ void MEXTI_voidInit()
 	#elif	EXTI_MODE == MEXTI_ON_CHANGE
 		SET_BIT( EXTI->RTSR , EXTI_LINE );
 		SET_BIT( EXTI->FTSR , EXTI_LINE );
-	#else	#error "Wrong Mode or Line configurations"
+	#else
+		#error "Wrong Mode or Line configurations"
 	#endif	
 	
 	/* Disable Interrupt */

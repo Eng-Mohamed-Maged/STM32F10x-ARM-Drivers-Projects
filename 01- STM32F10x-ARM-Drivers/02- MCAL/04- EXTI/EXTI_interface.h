@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 17 September 2023                                             */
+/*   Version   : V03                                                           */
+/*   Date      : 25 September 2023                                             */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all EXTI Driver with enum configurations         */
+/*               V03 : Warnning Fixed "#else - #endif"                         */
 /*******************************************************************************/
 #ifndef  EXTI_INTERFACE_H
 #define  EXTI_INTERFACE_H
@@ -65,24 +66,6 @@ void MEXTI_voidSetCallBack(void (*ptr)(void), MEXTI_LINE_t Copy_Line) ;
 #define MEXTI_ON_CHANGE      2
 
 
-/*  External Interrupt Lines  */
-
-#define MEXTI_LINE0  0
-#define MEXTI_LINE1  1
-#define MEXTI_LINE2  2
-#define MEXTI_LINE3  3
-#define MEXTI_LINE4  4
-#define MEXTI_LINE5  5
-#define MEXTI_LINE6  6
-#define MEXTI_LINE7  7
-#define MEXTI_LINE8  8
-#define MEXTI_LINE9  9
-#define MEXTI_LINE10 10
-#define MEXTI_LINE11 11
-#define MEXTI_LINE12 12
-#define MEXTI_LINE13 13
-#define MEXTI_LINE14 14
-#define MEXTI_LINE15 15
 
 
 
