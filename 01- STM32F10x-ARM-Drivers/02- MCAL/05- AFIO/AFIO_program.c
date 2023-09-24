@@ -1,15 +1,17 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V01                                                           */
-/*   Date      : 18 September 2023                                             */
+/*   Version   : V02                                                           */
+/*   Date      : 25 September 2023                                             */
 /*   Logs      : V01 : Initial Creation                                        */
+/*               V02 : Error Fixed                                             */
 /*******************************************************************************/
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
 
 #include "AFIO_interface.h"
-#include "AFIO_config.h"
 #include "AFIO_private.h"
+#include "AFIO_config.h"
+
 
 void  MAFIO_voidSetEXTIConfiguration(MAFIO_EXTI_LINES_t Copy_Line ,MAFIO_PORTS_t Copy_PortMap)
 {
