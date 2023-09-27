@@ -7,7 +7,7 @@
 /*******************************************************************************/
 /* Library includes */
 #include  "STD_TYPES.h"
-#include  "BIT_MATH.h"
+#include   "BIT_MATH.h"
 
 /* Module includes */
 #include  "STK_interface.h"
@@ -41,7 +41,7 @@ void MSTK_voidInit(void)
 		global_u32SystickClk = STK_AHP_CLK ;
 		
 	#elif 	STK_CLOCK_SOURCE == STK_AHB_BY_8
-		/* Clear BIT 0 for AHP CLK  */
+		/* Clear BIT 0 for AHP/8  CLK  */
 		CLR_BIT((STK -> CTRL) , MSTK_CTRL_CLKSOURCE);
 		/* Systick CLK = STK_AHB_BY_8 = 8/8 = 1 MHZ means that [1 tick =  1 us ] */
 		global_u32SystickClk = STK_AHP_CLK / 8 ;
@@ -172,7 +172,7 @@ void   MSTK_voidSetIntervalSingle (u32 Copy_u32Time ,STK_TIME_t Copy_timeUnit ,v
 		case TIME_S :
 				/* Calculate Numbers of Ticks */
 				Local_u32Load = Copy_u32Time * (global_u32SystickClk) ;
-				STK->Load = Local_u32Load ;
+				STK->LOAD = Local_u32Load ;
 				break;
 		/*----------------------------------------------------------------------------------*/		
 		case TIME_MS :
@@ -232,7 +232,7 @@ void   MSTK_voidSetIntervalPeriodic(u32 Copy_u32Time ,STK_TIME_t Copy_timeUnit ,
 		case TIME_S :
 				/* Calculate Numbers of Ticks */
 				Local_u32Load = Copy_u32Time * (global_u32SystickClk) ;
-				STK->Load = Local_u32Load ;
+				STK->LOAD = Local_u32Load ;
 				break;
 		/*----------------------------------------------------------------------------------*/		
 		case TIME_MS :
