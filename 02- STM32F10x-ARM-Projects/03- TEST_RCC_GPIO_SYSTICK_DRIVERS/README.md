@@ -1,7 +1,10 @@
 # STM32F10x-SysTick-Testing
 This code initializes one LED connected to pin PA2 and two buttons connected to pins 
-@ PB0 : Increase the delay of SysTick Timer for LED_BLINKING by 100 ms .
-@ PB1 : Decrease the delay of SysTick Timer for LED_BLINKING by 100 ms .
+
+**PB0 : Increase the delay of SysTick Timer for LED_BLINKING by 100 ms**
+
+**PB1 : Decrease the delay of SysTick Timer for LED_BLINKING by 100 ms**
+
 The EXTI (External Interrupt) lines are configured for each button, and the NVIC (Nested Vectored Interrupt Controller) is set up to handle the interrupts with different priorities.
 
 # Table of Contents
