@@ -18,7 +18,7 @@ The STM32F10x-ARM microcontroller is a powerful and widely used microcontroller 
 
 # Testing Video
 
-[![IMAGE ALT TEXT HERE](https://img.shields.io/badge/youtube-%23FF0000?style=flat&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=Tl7H0M8j1kY)
+[![IMAGE ALT TEXT HERE](https://github.com/Eng-Mohamed-Maged/STM32F10x-ARM-Drivers-Projects/blob/main/02-%20STM32F10x-ARM-Projects/03-%20TEST_RCC_GPIO_SYSTICK_DRIVERS/1.png)](https://www.youtube.com/watch?v=Tl7H0M8j1kY)
 
 # Getting Started
 To get started with using these drivers in your STM32F10x-ARM project, follow these steps:
