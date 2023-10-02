@@ -11,7 +11,7 @@
 
 #include "GPIO_interface.h"
 #include "GPIO_private.h"
-#include "GPIO_config.h"
+#include  "GPIO_config.h"
 
 
 void MGPIO_voidSetPinDirection(u8 Copy_u8Port  , u8 Copy_u8Pin ,u8 Copy_u8Mode )
