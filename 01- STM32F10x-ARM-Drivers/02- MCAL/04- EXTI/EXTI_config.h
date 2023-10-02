@@ -17,7 +17,7 @@
 		MEXTI_ON_CHANGE      2
 		
 */
-//#define  EXTI_MODE          MEXTI_ON_CHANGE
+#define  EXTI_MODE          MEXTI_FALLING_EDGE
 
 
 
@@ -41,7 +41,7 @@
 		MEXTI_LINE15 15
 */
 
-//#define  EXTI_LINE          MEXTI_LINE0
+#define  EXTI_LINE          MEXTI_LINE0
 
 
 

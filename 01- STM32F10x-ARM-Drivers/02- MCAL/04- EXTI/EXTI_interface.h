@@ -53,6 +53,8 @@ void MEXTI_voidDisableEXTI( MEXTI_LINE_t LOC_EXTILine);
 
 void MEXTI_voidSoftWareTrigger( MEXTI_LINE_t LOC_EXTILine);
 
+void MEXTI_voidClearPendingFlag(MEXTI_LINE_t Copy_EXTILine);
+
 /************  CallBack Functions Declerations  *************/
 
 void MEXTI_voidSetCallBack(void (*ptr)(void), MEXTI_LINE_t Copy_Line) ;

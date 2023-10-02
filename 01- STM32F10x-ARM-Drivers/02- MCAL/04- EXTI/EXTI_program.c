@@ -16,6 +16,9 @@
 
 void MEXTI_voidInit()
 {
+	/* Disable Interrupt */
+	MEXTI_voidDisableEXTI(EXTI_LINE);
+
 	// Configurations : //
 	/* Options :
 		//  External Interrupt Modes  //
@@ -27,8 +30,12 @@ void MEXTI_voidInit()
 	MEXTI_LINE_t EXTI_LINE = MEXTI_ON_CHANGE;
 	#if   	EXTI_MODE == MEXTI_RISING_EDGE
 		SET_BIT( EXTI->RTSR , EXTI_LINE );
-	#elif 	EXTI_MODE == MEXTI_FALLING_EDGE
+		CLR_BIT(EXTI->FTSR , EXTI_LINE );
+
+		#elif 	EXTI_MODE == MEXTI_FALLING_EDGE
 		SET_BIT( EXTI->FTSR , EXTI_LINE );
+		CLR_BIT( EXTI->RTSR , EXTI_LINE );
+
 	#elif	EXTI_MODE == MEXTI_ON_CHANGE
 		SET_BIT( EXTI->RTSR , EXTI_LINE );
 		SET_BIT( EXTI->FTSR , EXTI_LINE );
@@ -36,8 +43,6 @@ void MEXTI_voidInit()
 		#error "Wrong Mode or Line configurations"
 	#endif	
 	
-	/* Disable Interrupt */
-	MEXTI_voidDisableEXTI(EXTI_LINE);
 }
 
 
@@ -45,13 +50,20 @@ void MEXTI_voidSetSignalLatch(MEXTI_LINE_t Copy_EXTILine , MEXTI_MODE_t Copy_EXT
 {
 	switch (Copy_EXTIMode)
 	{
-		case MEXTI_RISING_EDGE  : SET_BIT( EXTI->RTSR , Copy_EXTILine );    break;
-		case MEXTI_FALLING_EDGE : SET_BIT( EXTI->FTSR , Copy_EXTILine );    break;
-		case MEXTI_ON_CHANGE    : SET_BIT( EXTI->RTSR , Copy_EXTILine );
-								  SET_BIT( EXTI->FTSR , Copy_EXTILine );    break;
+		case MEXTI_RISING_EDGE  :
+			SET_BIT( EXTI->RTSR , Copy_EXTILine );
+			CLR_BIT(EXTI->FTSR , EXTI_LINE );
+			break;
+		case MEXTI_FALLING_EDGE :
+			SET_BIT( EXTI->FTSR , Copy_EXTILine );
+			CLR_BIT( EXTI->RTSR , EXTI_LINE );
+			break;
+		case MEXTI_ON_CHANGE    :
+			SET_BIT( EXTI->RTSR , Copy_EXTILine );
+			SET_BIT( EXTI->FTSR , Copy_EXTILine );
+			break;
 	}
-	/* Set NOT Masked Interrupt  */
-	SET_BIT( EXTI->IMR , Copy_EXTILine );
+
 }
 
 
@@ -87,6 +99,10 @@ void MEXTI_voidSetCallBack(void (*ptr)(void), MEXTI_LINE_t Copy_EXTILine)
 	EXTI_CallBack[Copy_EXTILine]= ptr;
 
 }
+void MEXTI_voidClearPendingFlag(MEXTI_LINE_t Copy_EXTILine)
+{
+	SET_BIT(EXTI->PR , Copy_EXTILine );
+}
 
 
 
@@ -94,8 +110,8 @@ void MEXTI_voidSetCallBack(void (*ptr)(void), MEXTI_LINE_t Copy_EXTILine)
 void EXTI0_IRQHandler(void)
 {
 	EXTI_CallBack[0]();
-	/* Clear Pending bit */
-	SET_BIT( EXTI->PR , 0 );
+
+
 }
 
 /*************************  ISR 1 ***************************/
