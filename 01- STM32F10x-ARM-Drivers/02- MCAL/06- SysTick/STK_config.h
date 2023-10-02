@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 27 September 2023                                             */
+/*   Version   : V03                                                           */
+/*   Date      : 2 October 2023                                                */
 /*   Logs      : V01 : Initial creation                                        */
 /*               V02 : Updating the driver to be more professional             */
+/*               V03 : Errors Fixed                                            */
 /*******************************************************************************/
 
 #ifndef STK_CONFIG_H

@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 27 September 2023                                             */
+/*   Version   : V03                                                           */
+/*   Date      : 2 October 2023                                                */
 /*   Logs      : V01 : Initial creation                                        */
 /*               V02 : Updating the driver to be more professional             */
+/*               V03 : Errors Fixed                                            */
 /*******************************************************************************/
 /* Library includes */
 #include  "STD_TYPES.h"
@@ -18,10 +19,10 @@
 u32 global_u32SystickClk       = 0 ;
 
 /* CallBack Function for SysTick  */
-static void (*MSTK_CallBack) (void) ;
+void (*MSTK_CallBack) () ;
 
 /* Mode of interval [Single - Periodic] */
-static u8 MSTK_u8ModeOfInterval;
+u8 MSTK_u8ModeOfInterval = MSTK_SINGLE_INTERVAL;
 
 
 /*###########################################################################################################*/
@@ -100,7 +101,7 @@ void   MSTK_voidSetBusyWait (u32 Copy_u32Time , STK_TIME_t Copy_timeUnit)
 				if(Local_u32Load > MSTK_MAXIMUM_VALUE)
 				{
 					STK->LOAD = MSTK_MAXIMUM_VALUE ;
-					Local_u32RemainingTime = (((Local_u32Load - MSTK_MAXIMUM_VALUE)*1000)/global_u32SystickClk) ;
+					Local_u32RemainingTime = ((Local_u32Load - MSTK_MAXIMUM_VALUE)/(global_u32SystickClk / 1000 )) ;
 				}
 				else
 				{
@@ -115,7 +116,7 @@ void   MSTK_voidSetBusyWait (u32 Copy_u32Time , STK_TIME_t Copy_timeUnit)
 				if(Local_u32Load > MSTK_MAXIMUM_VALUE)
 				{
 					STK->LOAD = MSTK_MAXIMUM_VALUE ;
-					Local_u32RemainingTime = (((Local_u32Load - MSTK_MAXIMUM_VALUE)*1000000)/global_u32SystickClk) ;
+					Local_u32RemainingTime = ((Local_u32Load - MSTK_MAXIMUM_VALUE)/(global_u32SystickClk/1000000)) ;
 				}
 				else
 				{
@@ -192,8 +193,12 @@ void   MSTK_voidSetIntervalSingle (u32 Copy_u32Time ,STK_TIME_t Copy_timeUnit ,v
 		/*----------------------------------------------------------------------------------*/			
 	}
 	
-	/* Save CallBack */
-	MSTK_CallBack = Copy_ptr;
+	if(Copy_ptr != NULL)
+	{
+		/* Save CallBack */
+		MSTK_CallBack = Copy_ptr;
+	}
+	else{}
 	
 	/* Start timer */
 	SET_BIT((STK->CTRL) , MSTK_CTRL_ENABLE);	
@@ -252,8 +257,13 @@ void   MSTK_voidSetIntervalPeriodic(u32 Copy_u32Time ,STK_TIME_t Copy_timeUnit ,
 		/*----------------------------------------------------------------------------------*/			
 	}
 	
-	/* Save CallBack */
-	MSTK_CallBack = Copy_ptr;
+
+	if(Copy_ptr != NULL)
+	{
+		/* Save CallBack */
+		MSTK_CallBack = Copy_ptr;
+	}
+	else{}
 	
 	/* Start timer */
 	SET_BIT(STK->CTRL , MSTK_CTRL_ENABLE);	
@@ -316,8 +326,9 @@ void   MSTK_voidResumeIntervalPeriodic (void)
 /*************************************************************************************************************/
 u32 MSTK_u32GetElapsedTime (STK_TIME_t Copy_timeUnit) 
 {
+	u32 Local_u32Value = STK->LOAD - STK->VAL ;
 	u32 Local_u32ElapsedTime = 0 ;
-	u32 Local_u32Value = ((STK->LOAD) - (STK->VAL)) ;
+
 	switch(Copy_timeUnit)
 	{
 		/*----------------------------------------------------------------------------------*/
@@ -329,13 +340,13 @@ u32 MSTK_u32GetElapsedTime (STK_TIME_t Copy_timeUnit)
 		/*----------------------------------------------------------------------------------*/		
 		case TIME_MS :
 				/* Calculate Numbers of Ticks */
-				Local_u32ElapsedTime = ((Local_u32Value * 1000)/global_u32SystickClk) ;
+				Local_u32ElapsedTime = (Local_u32Value / (global_u32SystickClk/1000) ) ;
 
 				break;
 		/*----------------------------------------------------------------------------------*/		
 		case TIME_US :
 				/* Calculate Numbers of Ticks */
-				Local_u32ElapsedTime = ((Local_u32Value * 1000000)/global_u32SystickClk) ;		
+				Local_u32ElapsedTime = Local_u32Value / (global_u32SystickClk / 1000000) ;
 				break;
 		/*----------------------------------------------------------------------------------*/		
 		default : 
@@ -370,13 +381,13 @@ u32  MSTK_u32GetRemainingTime (STK_TIME_t Copy_timeUnit)
 		/*----------------------------------------------------------------------------------*/		
 		case TIME_MS :
 				/* Calculate Numbers of Ticks */
-				Local_u32RemainingTime = ((Local_u32Value * 1000)/global_u32SystickClk) ;
+				Local_u32RemainingTime = (Local_u32Value /(global_u32SystickClk/1000)) ;
 
 				break;
 		/*----------------------------------------------------------------------------------*/		
 		case TIME_US :
 				/* Calculate Numbers of Ticks */
-				Local_u32RemainingTime = ((Local_u32Value * 1000000)/global_u32SystickClk) ;		
+				Local_u32RemainingTime = (Local_u32Value /( global_u32SystickClk / 1000000)) ;
 				break;
 		/*----------------------------------------------------------------------------------*/		
 		default : 
@@ -385,6 +396,21 @@ u32  MSTK_u32GetRemainingTime (STK_TIME_t Copy_timeUnit)
 	}
 	return Local_u32RemainingTime;
 }
+
+void MSTK_voidStart(void)
+{
+	/* Zero the Val Register */
+	STK->VAL = 0 ;
+
+	/* Load value with max value */
+	STK->LOAD = 0xFFFFFF;
+
+	/* Enable timer */
+	SET_BIT(STK->CTRL , MSTK_CTRL_ENABLE);
+
+}
+
+
 /*-----------------------------------------------------------------------------------------------------------*/
 /*###########################################################################################################*/
 /*###########################################################################################################*/
@@ -392,7 +418,7 @@ u32  MSTK_u32GetRemainingTime (STK_TIME_t Copy_timeUnit)
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 void SysTick_Handler (void)
 {
-	u8 Local_u8Temporary;
+	volatile u8 Local_u8Temporary;
 
 	if (MSTK_u8ModeOfInterval == MSTK_SINGLE_INTERVAL)
 	{	
@@ -400,7 +426,7 @@ void SysTick_Handler (void)
 		CLR_BIT(STK->CTRL , MSTK_CTRL_ENABLE);
 	
 		/* Disable timer Interrupt */
-		CLR_BIT(STK->CTRL , MSTK_CTRL_TICKINT);		
+		CLR_BIT(STK->CTRL , MSTK_CTRL_TICKINT);
 	}
 
 	/* Callback notification */

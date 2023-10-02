@@ -1,9 +1,10 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V02                                                           */
-/*   Date      : 27 September 2023                                             */
+/*   Version   : V03                                                           */
+/*   Date      : 2 October 2023                                                */
 /*   Logs      : V01 : Initial creation                                        */
 /*               V02 : Updating the driver to be more professional             */
+/*               V03 : Errors Fixed                                            */
 /*******************************************************************************/
 #ifndef STK_INTERFACE_H
 #define	STK_INTERFACE_H
@@ -112,6 +113,8 @@ u32    MSTK_u32GetElapsedTime      (STK_TIME_t Copy_timeUnit) ;
 /*-----------------------------------------------------------------------------------------------------------*/
 u32    MSTK_u32GetRemainingTime    (STK_TIME_t Copy_timeUnit) ;
 /*-----------------------------------------------------------------------------------------------------------*/
+
+void MSTK_voidStart(void);
 
 #endif
 
