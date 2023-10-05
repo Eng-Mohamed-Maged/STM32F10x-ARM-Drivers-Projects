@@ -1,9 +1,11 @@
-/*****************************************************/
-/* Author      : Mohamed Maged                       */
-/* Version     : V01                                 */
-/* Date        : 3 October 2023                      */
-/* Logs        : V01 : Initial Creation              */
-/*****************************************************/
+/****************************************************************************/
+/* Author      : Mohamed Maged                                              */
+/* Version     : V02                                                        */
+/* Date        : 5 October 2023                                             */
+/* Logs        : V01 : Initial Creation                                     */
+/*               V02 : Adding [Function to get Elapsed Time ]               */
+/*                     Adding [Function to Stop/Start Timer ]               */
+/****************************************************************************/
 #ifndef TIMER_CONFIG_H
 #define TIMER_CONFIG_H
 
@@ -25,13 +27,14 @@
 
 /***  Timer configurations struct  ***/
 typedef struct {
-	u8  u8Channel           ;
-	u8  u8Enable            ;
-	u8  u8Mode              ;
-	u8  u8InterruptEnable   ;
-	u32 u32ClkSource        ;
-	u16 u16Prescaler        ;
-	u32 u32Interval         ;
+	u8  u8Channel              ;
+	u8  u8Enable               ;
+	u8  u8Mode                 ;
+	u8  u8InterruptEnable      ;
+	u32 u32ClkSource           ;
+	u16 u16Prescaler           ;
+	u32 u32Interval            ;
+	u8  u8AutoReload_REGISTER  ;
 }TIMER_config_t;
 
 /* Macros */
