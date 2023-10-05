@@ -1,23 +1,13 @@
 /********************************************************************/
 /*  Author   : Mohamed Maged                                        */
-/*  Version  : V01                                                  */
-/*  Date     : 1 October 2023                                       */
+/*  Version  : V02                                                  */
+/*  Date     : 5 October 2023                                       */
 /*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Adding Timers Driver instead of SysTick        */
 /********************************************************************/
 #ifndef REMOTE_INTERFACE_H
 #define REMOTE_INTERFACE_H
 
-/* 
-  Important Rules you should follow :
-  1) Open RCC for the GPIO-PORT which you will use as EXTI for the reciever.
-  2) Open RCC for AFIO if you want mapping the EXTI [By default EXTI0=>A0].
-  3) Don't use Systick Driver in any other applications [It will cause Problems].
-  4) Call (REMOTE_voidInit) before While
-  5) Check the Recieved data from (REMOTE_getButton)  .
-  6) If the Recieved data is less than (REMOTE_NO_DATA) then the data is valid .
-  
-
-/* Buttons IDs for NEC Remote */
 typedef enum {
 	REMOTE_ZERO     ,
     REMOTE_ONE      ,
@@ -44,23 +34,28 @@ typedef enum {
 	REMOTE_ERROR    ,
 }REMOTE_buttons_t;
 
-
+/**** Timer channels ****/
+typedef enum {
+	TIMER1,
+	TIMER2,
+	TIMER3,
+	TIMER4,
+}REMOTE_TIMERS_t;
 
 /* 
-  - REMOTE_voidInit : Intialize the exti for remote  
-  - Input           : NONE
-  - Output          : NONE 
+  * REMOTE_voidInit - > Intialize the exti for remote  
 */
 void REMOTE_voidInit(void);
 
 
 /* 
-  - REMOTE_getButton  : Get the pressed button 
-  - Inputs            : NONE
-  - Output            :(REMOTE_buttons_t) the pressed button 
-						# if no data came return   (REMOTE_NO_DATA)
-		                # if data was not correct  (REMOTE_ERROR)
+  * REMOTE_getButton - > get the button pressed
+  * O/P : (REMOTE_buttons_t) the pressed button if no data came return (REMOTE_NO_DATA)
+		   if data was not right (REMOTE_ERROR)
 */
-REMOTE_buttons_t REMOTE_getButton (void);	
-	
+REMOTE_buttons_t REMOTE_getButton (void);
+
+
+
+
 #endif
