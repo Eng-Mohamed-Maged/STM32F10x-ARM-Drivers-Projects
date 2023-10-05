@@ -1,10 +1,11 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V03                                                           */
-/*   Date      : 25 September 2023                                             */
+/*   Version   : V04                                                           */
+/*   Date      : 4 October 2023                                                */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all EXTI Driver with enum configurations         */
 /*               V03 : Warnning Fixed "#else - #endif"                         */
+/*               V04 : Fix EXTI_HANDLER {5 - 15}                               */
 /*******************************************************************************/
 #ifndef  EXTI_INTERFACE_H
 #define  EXTI_INTERFACE_H

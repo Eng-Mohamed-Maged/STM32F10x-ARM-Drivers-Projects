@@ -1,10 +1,11 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V03                                                           */
-/*   Date      : 25 September 2023                                             */
+/*   Version   : V04                                                           */
+/*   Date      : 4 October 2023                                                */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all EXTI Driver with enum configurations         */
 /*               V03 : Warnning Fixed "#else - #endif"                         */
+/*               V04 : Fix EXTI_HANDLER {5 - 15}                               */
 /*******************************************************************************/
 
 #include  "STD_TYPES.h"
@@ -95,8 +96,19 @@ void MEXTI_voidSoftWareTrigger( MEXTI_LINE_t LOC_EXTILine)
 
 void MEXTI_voidSetCallBack(void (*ptr)(void), MEXTI_LINE_t Copy_EXTILine)
 {
+	if(Copy_EXTILine < 5)
+	{
+		EXTI_CallBack[Copy_EXTILine]= ptr;
+	}
+	else if( (Copy_EXTILine  > 4) && (Copy_EXTILine  < 10) )
+	{
+		EXTI_CallBack[5]= ptr;
+	}
+	else if( (Copy_EXTILine  > 9) && (Copy_EXTILine  < 16) )
+	{
+		EXTI_CallBack[10]= ptr;
+	}
 
-	EXTI_CallBack[Copy_EXTILine]= ptr;
 
 }
 void MEXTI_voidClearPendingFlag(MEXTI_LINE_t Copy_EXTILine)
@@ -110,8 +122,8 @@ void MEXTI_voidClearPendingFlag(MEXTI_LINE_t Copy_EXTILine)
 void EXTI0_IRQHandler(void)
 {
 	EXTI_CallBack[0]();
-
-
+	/* Clear Pending bit */
+	SET_BIT( EXTI->PR , 1 );
 }
 
 /*************************  ISR 1 ***************************/
@@ -142,81 +154,98 @@ void EXTI4_IRQHandler(void)
 	/* Clear Pending bit */
 	SET_BIT( EXTI->PR , 4 );
 }
-/*************************  ISR 5 ***************************/
-void EXTI5_IRQHandler(void)
+
+void EXTI9_5_IRQHandler(void)
 {
 	EXTI_CallBack[5]();
 	/* Clear Pending bit */
 	SET_BIT( EXTI->PR , 5 );
 }
-/*************************  ISR 6 ***************************/
-void EXTI6_IRQHandler(void)
-{
-	EXTI_CallBack[6]();
-	/* Clear Pending bit */
-	SET_BIT( EXTI->PR , 6 );
-}
-/*************************  ISR 7 ***************************/
-void EXTI7_IRQHandler(void)
-{
-	EXTI_CallBack[7]();
-	/* Clear Pending bit */
-	SET_BIT( EXTI->PR , 7 );
-}
-/*************************  ISR 8 ***************************/
-void EXTI8_IRQHandler(void)
-{
-	EXTI_CallBack[8]();
-	/* Clear Pending bit */
-	SET_BIT( EXTI->PR , 8 );
-}
-/*************************  ISR 9 ***************************/
-void EXTI9_IRQHandler(void)
-{
-	EXTI_CallBack[9]();
-	/* Clear Pending bit */
-	SET_BIT( EXTI->PR , 9 );
-}
-/*************************  ISR 10 ***************************/
-void EXTI10_IRQHandler(void)
+
+void EXTI15_10_IRQHandler(void)
 {
 	EXTI_CallBack[10]();
 	/* Clear Pending bit */
 	SET_BIT( EXTI->PR , 10 );
 }
-/*************************  ISR 11 ***************************/
+/*
+
+************************  ISR 5 **************************
+void EXTI5_IRQHandler(void)
+{
+	EXTI_CallBack[5]();
+	 Clear Pending bit
+	SET_BIT( EXTI->PR , 5 );
+}
+************************  ISR 6 **************************
+void EXTI6_IRQHandler(void)
+{
+	EXTI_CallBack[6]();
+	 Clear Pending bit
+	SET_BIT( EXTI->PR , 6 );
+}
+************************  ISR 7 **************************
+void EXTI7_IRQHandler(void)
+{
+	EXTI_CallBack[7]();
+	 Clear Pending bit
+	SET_BIT( EXTI->PR , 7 );
+}
+************************  ISR 8 **************************
+void EXTI8_IRQHandler(void)
+{
+	EXTI_CallBack[8]();
+	 Clear Pending bit
+	SET_BIT( EXTI->PR , 8 );
+}
+************************  ISR 9 **************************
+void EXTI9_IRQHandler(void)
+{
+	EXTI_CallBack[9]();
+	 Clear Pending bit
+	SET_BIT( EXTI->PR , 9 );
+}
+************************  ISR 10 **************************
+void EXTI10_IRQHandler(void)
+{
+	EXTI_CallBack[10]();
+	 Clear Pending bit
+	SET_BIT( EXTI->PR , 10 );
+}
+************************  ISR 11 **************************
 void EXTI11_IRQHandler(void)
 {
 	EXTI_CallBack[11]();
-	/* Clear Pending bit */
+	 Clear Pending bit
 	SET_BIT( EXTI->PR , 11 );
 }
-/*************************  ISR 12 ***************************/
+************************  ISR 12 **************************
 void EXTI12_IRQHandler(void)
 {
 	EXTI_CallBack[12]();
-	/* Clear Pending bit */
+	 Clear Pending bit
 	SET_BIT( EXTI->PR , 12 );
 }
-/*************************  ISR 13 ***************************/
+************************  ISR 13 **************************
 void EXTI13_IRQHandler(void)
 {
 	EXTI_CallBack[13]();
-	/* Clear Pending bit */
+	 Clear Pending bit
 	SET_BIT( EXTI->PR , 13 );
 }
-/*************************  ISR 14 ***************************/
+************************  ISR 14 **************************
 void EXTI14_IRQHandler(void)
 {
 	EXTI_CallBack[14]();
-	/* Clear Pending bit */
+	 Clear Pending bit
 	SET_BIT( EXTI->PR , 14 );
 }
-/*************************  ISR 15 ***************************/
+************************  ISR 15 **************************
 void EXTI15_IRQHandler(void)
 {
 	EXTI_CallBack[15]();
-	/* Clear Pending bit */
+	 Clear Pending bit
 	SET_BIT( EXTI->PR , 15 );
 }
+*/
 
