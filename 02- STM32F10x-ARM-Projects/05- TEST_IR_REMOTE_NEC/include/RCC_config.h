@@ -10,7 +10,7 @@
 			RCC_HSI
 			RCC_HSE_RC
 			RCC_HSE_CRYSTAL                           */
-#define  RCC_ClOCK_TYPE                  RCC_HSE_CRYSTAL
+#define  RCC_ClOCK_TYPE                  RCC_HSI
 /*********************************************/                                                                        
 /*Choose:
 			0 -> 31                                   */

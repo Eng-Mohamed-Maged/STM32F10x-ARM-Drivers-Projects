@@ -35,22 +35,26 @@ void main(void){
 	RCC_voidEnableClock(RCC_APB2 , RCC_APB2_GPIOB);
 	RCC_voidEnableClock(RCC_APB2 , RCC_APB2_AFIO);
 
+	/* Enable the clock for Timer1 */
+	RCC_voidEnableClock(RCC_APB1,RCC_APB1_Timer2);
+//	RCC_voidEnableClock(RCC_APB1,RCC_APB1_Timer3);
+
 	/**************************************************************************/
 		/* RGB LED MODE and Value */
-		/* Configure GPIOA_PIN1 as output for [RED] LED */
-		MGPIO_voidSetPinDirection(GPIOA,GPIO_PIN1,OUTPUT_SPEED_2MHZ_PP);
+		/* Configure GPIOA_PIN9 as output for [RED] LED */
+		MGPIO_voidSetPinDirection(GPIOA,GPIO_PIN9,OUTPUT_SPEED_2MHZ_PP);
 		/* Set the default Pin value as low */
-		MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN1,GPIO_LOW);
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN9,GPIO_LOW);
 
-		/* Configure GPIOA_PIN2 as output for [GREEN] LED */
-		MGPIO_voidSetPinDirection(GPIOA,GPIO_PIN2,OUTPUT_SPEED_2MHZ_PP);
+		/* Configure GPIOA_PIN10 as output for [GREEN] LED */
+		MGPIO_voidSetPinDirection(GPIOA,GPIO_PIN10,OUTPUT_SPEED_2MHZ_PP);
 		/* Set the default Pin value as low */
-		MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN2,GPIO_LOW);
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN10,GPIO_LOW);
 
-		/* Configure GPIOA_PIN3 as output for [BLUE] LED */
-		MGPIO_voidSetPinDirection(GPIOA,GPIO_PIN3,OUTPUT_SPEED_2MHZ_PP);
+		/* Configure GPIOA_PIN11 as output for [BLUE] LED */
+		MGPIO_voidSetPinDirection(GPIOA,GPIO_PIN11,OUTPUT_SPEED_2MHZ_PP);
 		/* Set the default Pin value as low */
-		MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN3,GPIO_LOW);
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN11,GPIO_LOW);
 	/**************************************************************************/
 
 
@@ -72,32 +76,32 @@ if(global_pressedButton < REMOTE_NO_DATA)
 	{
 	   case REMOTE_ONE:
 			/* TURN ON the [RED] LED */
-		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN1,GPIO_HIGH);
+		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN9,GPIO_HIGH);
 		   break;
 
 	   case REMOTE_TWO:
 			/* TURN ON the [GREEN] LED */
-		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN2,GPIO_HIGH);
+		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN10,GPIO_HIGH);
 		    break;
 
 	   case REMOTE_THREE:
 		   /* TURN ON the [BLUE] LED */
-		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN3,GPIO_HIGH);
+		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN11,GPIO_HIGH);
 		    break;
 
 	   case REMOTE_FOUR:
 		   /* TURN OFF the [RED] LED */
-		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN1,GPIO_LOW);
+		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN9,GPIO_LOW);
 		    break;
 
 	   case REMOTE_FIVE:
 		   /* TURN OFF the [GREEN] LED */
-		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN2,GPIO_LOW);
+		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN10,GPIO_LOW);
 		    break;
 
 	   case REMOTE_SIX:
 		   /* TURN OFF the [BLUE] LED */
-		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN3,GPIO_LOW);
+		   MGPIO_voidSetOrResetPinValue_BSRR_BRR(GPIOA,GPIO_PIN11,GPIO_LOW);
 		    break;
 
 	   default : break;

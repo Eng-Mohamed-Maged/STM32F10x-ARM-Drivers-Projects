@@ -1,24 +1,33 @@
-/*****************************************************/
- /* Author      : mosad                              */
- /* Version     : v01                                */
- /* date        : 31/8/2020                          */
-/*****************************************************/
+/********************************************************************/
+/*  Author   : Mohamed Maged                                        */
+/*  Version  : V02                                                  */
+/*  Date     : 5 October 2023                                       */
+/*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Adding Timers Driver instead of SysTick        */
+/********************************************************************/
 #ifndef REMOTE_PRIVATE_H
 #define REMOTE_PRIVATE_H
 
-
-
-
+/*************************************/
+/* Timer Used in this Driver */
+#define  SYSTICK_TIMER         0
+#define  TIMERS_1_4            1
+/*************************************/
+#define TIMER1     0
+#define TIMER2     1
+#define TIMER3     2
+#define TIMER4     3
+/*************************************/
 /* Frame bits */
 #define  ADDRESS_BIT           0 
 #define  ADDRESS_INVERTED_BIT  8
-#define   DATA_BIT              16
+#define  DATA_BIT              16
 #define  DATA_INVERTED_BIT     24
-
+/*************************************/
 /* Errors */
 #define   FRAME_CORRECT   1
 #define   FRAME_ERROR     0
-
+/*************************************/
 /* Buttons data ID */
 #define     POWER            69
 #define     MODE             70

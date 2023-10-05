@@ -1,34 +1,43 @@
-/*****************************************************/
- /* Author      : mosad                              */
- /* Version     : v01                                */
- /* date        : 31/8/2020                          */
-/*****************************************************/
+/********************************************************************/
+/*  Author   : Mohamed Maged                                        */
+/*  Version  : V02                                                  */
+/*  Date     : 5 October 2023                                       */
+/*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Adding Timers Driver instead of SysTick        */
+/********************************************************************/
 
 /* Library includes */
 #include "BIT_MATH.h"
 #include "STD_TYPES.h"
 
 /* MCAL includes */
-#include  "GPIO_interface.h"
-#include  "STK_interface.h"
-#include  "EXTI_interface.h"
-#include  "AFIO_interface.h"
-#include  "NVIC_interface.h"
+#include   "GPIO_interface.h"
+#include   "EXTI_interface.h"
+#include   "AFIO_interface.h"
+#include   "NVIC_interface.h"
+
 
 /* module includes */
 #include "REMOTE_interface.h"
 #include "REMOTE_config.h"
 #include "REMOTE_private.h"
 
+#if   TIMER_TYPE == SYSTICK_TIMER
+	#include   "STK_interface.h"
+#elif TIMER_TYPE == TIMERS_1_4
+	#include   "TIMER_interface.h"
+#endif
+
+
 volatile u8 global_u8Flag               = 0 ;
 volatile u8 global_u8FinishFlag         = 0 ;
 volatile u32 global_u32Frame            = 0 ;
 volatile u8 global_u8Index              = 0 ;
 
-u32 global_u32Data             = 0 ;
-u32 global_u32DataInverted     = 0 ;
-u32 global_u32Address          = 0 ;
-u32 global_u32AddressInverted  = 0 ;
+u32 global_u32Data                      = 0 ;
+u32 global_u32DataInverted              = 0 ;
+u32 global_u32Address                   = 0 ;
+u32 global_u32AddressInverted           = 0 ;
 
 void REMOTE_HANDLER(void);
 void REMOTE_voidInit(void)
@@ -47,8 +56,14 @@ void REMOTE_voidInit(void)
 	/* Configure the AFIO */
 	MAFIO_voidSetEXTIConfiguration(REMOTE_EXTI_LINE,REMOTE_EXTI_PORT);
 
-	/* Systick initialize */
-	MSTK_voidInit();
+    #if   TIMER_TYPE == SYSTICK_TIMER
+			/* Systick initialize */
+			MSTK_voidInit();
+    #elif TIMER_TYPE == TIMERS_1_4
+			/* Systick initialize */
+			TIMER_voidInit();
+    #endif
+
 }
 
 
@@ -95,29 +110,37 @@ void REMOTE_HANDLER(void)
 {
 	/* Clear flag */
 	MEXTI_voidClearPendingFlag(REMOTE_EXTI_LINE);
-	/* Get time elapsed*/
-	u32 time = MSTK_u32GetElapsedTime(TIME_US);
-	/* Start timer to count till the next isr */
-	MSTK_voidStart();
+    #if   TIMER_TYPE == SYSTICK_TIMER
+		/* Get time elapsed*/
+		u32 etime = MSTK_u32GetElapsedTime(TIME_US);
+		/* Start timer to count till the next isr */
+		MSTK_voidStart();
+    #elif TIMER_TYPE == TIMERS_1_4
+		/* Get time elapsed*/
+		 u32 etime = TIMER_u32GetElapsedTime(TIMER_NUMBER,TIMER_US);
+		/* Start timer to count till the next isr */
+		 TIMER_voidStart(TIMER_NUMBER);
+    #endif
+
 	/* Wait for the start bit before recording frame*/
-	if ((global_u8Flag == 0) && (time > 10000) && (time < 15000)){
+	if ((global_u8Flag == 0) && (etime > 10000) && (etime < 15000)){
 		global_u8Flag = 1 ;
 		global_u8Index = 0 ;
 	}
 	/* Start bit came and will start recording the frame */
 	else if (global_u8Flag == 1){
 		/* If bit == 1 */
-		if ((time > 2000 ) && (time < 2400 )){
+		if ((etime > 2000 ) && (etime < 2400 )){
 			SET_BIT(global_u32Frame , global_u8Index );
 			global_u8Index++;
 		}
 		/* If bit == 0 */
-		else if ( (time > 1000 ) &&  (time < 1200 ) ){
+		else if ( (etime > 1000 ) &&  (etime < 1200 ) ){
 			CLR_BIT(global_u32Frame , global_u8Index );
 			global_u8Index++;
 		}
 		/* the Wait before the next frame */
-		else if ( (time > 20000 )){
+		else if ( (etime > 20000 )){
 			global_u8Flag = 0 ;
 			global_u8FinishFlag = 1 ; 
 		}

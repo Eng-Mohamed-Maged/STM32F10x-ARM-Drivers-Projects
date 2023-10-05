@@ -11,6 +11,8 @@ C_SRCS += \
 ../src/RCC_program.c \
 ../src/REMOTE_program.c \
 ../src/STK_program.c \
+../src/TIMER_config.c \
+../src/TIMER_program.c \
 ../src/main.c 
 
 OBJS += \
@@ -21,6 +23,8 @@ OBJS += \
 ./src/RCC_program.o \
 ./src/REMOTE_program.o \
 ./src/STK_program.o \
+./src/TIMER_config.o \
+./src/TIMER_program.o \
 ./src/main.o 
 
 C_DEPS += \
@@ -31,6 +35,8 @@ C_DEPS += \
 ./src/RCC_program.d \
 ./src/REMOTE_program.d \
 ./src/STK_program.d \
+./src/TIMER_config.d \
+./src/TIMER_program.d \
 ./src/main.d 
 
 

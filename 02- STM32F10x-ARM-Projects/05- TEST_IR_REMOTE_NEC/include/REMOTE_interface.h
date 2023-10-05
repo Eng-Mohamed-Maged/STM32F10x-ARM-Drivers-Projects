@@ -1,8 +1,10 @@
-/*****************************************************/
- /* Author      : mosad                              */
- /* Version     : v01                                */
- /* date        : 31/8/2020                          */
-/*****************************************************/
+/********************************************************************/
+/*  Author   : Mohamed Maged                                        */
+/*  Version  : V02                                                  */
+/*  Date     : 5 October 2023                                       */
+/*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Adding Timers Driver instead of SysTick        */
+/********************************************************************/
 #ifndef REMOTE_INTERFACE_H
 #define REMOTE_INTERFACE_H
 
@@ -32,7 +34,13 @@ typedef enum {
 	REMOTE_ERROR    ,
 }REMOTE_buttons_t;
 
-
+/**** Timer channels ****/
+typedef enum {
+	TIMER1,
+	TIMER2,
+	TIMER3,
+	TIMER4,
+}REMOTE_TIMERS_t;
 
 /* 
   * REMOTE_voidInit - > Intialize the exti for remote  

@@ -8,7 +8,7 @@
 /*******************************************************************************/
 /* Library includes */
 #include  "STD_TYPES.h"
-#include   "BIT_MATH.h"
+#include  "BIT_MATH.h"
 
 /* Module includes */
 #include  "STK_interface.h"

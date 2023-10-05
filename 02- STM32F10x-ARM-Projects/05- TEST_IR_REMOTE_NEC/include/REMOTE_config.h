@@ -1,18 +1,37 @@
-/*****************************************************/
- /* Author      : mosad                              */
- /* Version     : v01                                */
- /* date        : 31/8/2020                          */
-/*****************************************************/
+/********************************************************************/
+/*  Author   : Mohamed Maged                                        */
+/*  Version  : V02                                                  */
+/*  Date     : 5 October 2023                                       */
+/*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Adding Timers Driver instead of SysTick        */
+/********************************************************************/
 #ifndef REMOTE_CONFIG_H
 #define REMOTE_CONFIG_H
 
 
+/*
+	Options :
+	- SYSTICK_TIMER
+	- TIMERS_1_4
+*/
+#define TIMER_TYPE        TIMERS_1_4
+/*
+	Options :
+		TIMER1  = 0
+		TIMER2  = 1
+		TIMER3  = 2
+		TIMER4  = 3
+*/
+
+#if TIMER_TYPE == TIMERS_1_4
+	#define TIMER_NUMBER     TIMER2
+#endif
 
 /*
 	Options : 
 		0 : 15 
 */
-#define   REMOTE_EXTI_LINE     0
+#define   REMOTE_EXTI_LINE     8
 
 /*
 	Options : 
