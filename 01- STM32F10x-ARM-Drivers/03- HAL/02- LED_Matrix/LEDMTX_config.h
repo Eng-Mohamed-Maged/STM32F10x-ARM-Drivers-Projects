@@ -1,8 +1,9 @@
 /********************************************************************/
 /*  Author	 : Mohamed Maged							 	        */
-/*  Version	 : V01  												*/
-/*	Date	 : 29 September 2023                                    */
+/*  Version	 : V02  												*/
+/*	Date	 : 6 October 2023                                       */
 /*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Update the whole Driver                        */
 /********************************************************************/
 #ifndef LEDMTX_CONFIG_H
 #define LEDMTX_CONFIG_H
@@ -44,6 +45,8 @@
 #define LEDMTX_ROW_NUMBER                8
 #define LEDMTX_COLOUMNS_NUMBER           8
 
-
+// CONTROL FROM [ROWS OR COLUMNS]
+#define   LEDMTX_ROW_VOLTAGE             1
+#define   LEDMTX_COLOUMN_VOLTAGE         0
 
 #endif

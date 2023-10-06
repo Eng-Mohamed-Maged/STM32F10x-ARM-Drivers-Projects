@@ -1,171 +1,115 @@
 /********************************************************************/
 /*  Author	 : Mohamed Maged							 	        */
-/*  Version	 : V01  												*/
-/*	Date	 : 29 September 2023                                    */
+/*  Version	 : V02  												*/
+/*	Date	 : 6 October 2023                                       */
 /*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Update the whole Driver                        */
 /********************************************************************/
 #include "STD_TYPES.h"
 #include "BIT_MATH.h"
-
+/*************************************************************************/
 #include "GPIO_interface.h"
 #include "STK_interface.h"
-
+/*************************************************************************/
 #include "LEDMTX_interface.h"
 #include "LEDMTX_private.h"
-#include "LEDMTX_config.h"
-
-
+#include  "LEDMTX_config.h"
+/*************************************************************************/
+/* Two Arrays for row and coloumns */
+/* Number of rows or columns is multiple by 2 for holding [PORT],[PIN] */
+u8 LEDMRX_globalRows[(LEDMTX_ROW_NUMBER * 2 )] =
+{LEDMTX_ROW0_PIN,LEDMTX_ROW1_PIN,LEDMTX_ROW2_PIN,LEDMTX_ROW3_PIN,LEDMTX_ROW4_PIN,LEDMTX_ROW5_PIN,LEDMTX_ROW6_PIN,LEDMTX_ROW7_PIN};
+/*************************************************************************/
+u8 LEDMRX_globalColoumns[(LEDMTX_COLOUMNS_NUMBER*2)] =
+{LEDMTX_COL0_PIN,LEDMTX_COL1_PIN,LEDMTX_COL2_PIN,LEDMTX_COL3_PIN,LEDMTX_COL4_PIN,LEDMTX_COL5_PIN,LEDMTX_COL6_PIN,LEDMTX_COL7_PIN};
+/*************************************************************************/
+/********************************************************************/
+/* Function Name :  HLEDMTX_voidInit                                */
+/* Inputs        :  NONE                                            */
+/* Outputs       :  NONE                                            */
+/* Descreiption  :  Intialization of Pins [Rows - Columns]          */
+/********************************************************************/
 void HLEDMTX_voidInit (void)
 {
-	
 	/* Initialize Rows */
-	MGPIO_voidSetPinDirection (LEDMTX_ROW0_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW1_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW2_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW3_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW4_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW5_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW6_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_ROW7_PIN , LEDMTX_PINS_SPEED) ;
-
+	for(u8 i = 0 ; i < (LEDMTX_ROW_NUMBER * 2) ; i += 2 )
+	{
+		MGPIO_voidSetPinDirection (LEDMRX_globalRows[i],LEDMRX_globalRows[i+1],LEDMTX_PINS_SPEED) ;
+	}
+		
 	/* Initialize Columns */
-	MGPIO_voidSetPinDirection (LEDMTX_COL0_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL1_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL2_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL3_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL4_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL5_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL6_PIN , LEDMTX_PINS_SPEED) ;
-	MGPIO_voidSetPinDirection (LEDMTX_COL7_PIN , LEDMTX_PINS_SPEED) ;
+	for(u8 i = 0 ; i < (LEDMTX_COLOUMNS_NUMBER * 2) ; i += 2 )
+	{
+		MGPIO_voidSetPinDirection (LEDMRX_globalColoumns[i],LEDMRX_globalColoumns[i+1],LEDMTX_PINS_SPEED) ;
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(LEDMRX_globalColoumns[i],LEDMRX_globalColoumns[i+1],!(LEDMTX_COLOUMN_VOLTAGE));
+	}
+
 }
-
-
+/*************************************************************************/
+/********************************************************************/
+/* Function Name :  HLEDMTX_voidDisplay                             */
+/* Inputs        :  LED MATRIX [DATA]                               */
+/* Outputs       :  NONE                                            */
+/* Descreiption  :  Display a static figure                         */
+/********************************************************************/
+void HLEDMTX_voidDisplay (u8 *copy_u8Data)
+{
+	for(u8 i = 0 ; i < (LEDMTX_COLOUMNS_NUMBER * 2) ; i += 2 )
+	{
+		/* Activate a coloumn */
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(LEDMRX_globalColoumns[i],LEDMRX_globalColoumns[i+1],LEDMTX_COLOUMN_VOLTAGE);
+		/* Write to the rows */
+		SetRowValues(copy_u8Data[(i/2)]);
+	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
+		MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
+		/* Deactivate a coloumn */
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(LEDMRX_globalColoumns[i],LEDMRX_globalColoumns[i+1],!(LEDMTX_COLOUMN_VOLTAGE));
+	}										  
+}
+/*************************************************************************/
+/********************************************************************/
+/* Function Name :  HLEDMTX_voidShiftDisplay                        */
+/* Inputs        :  LED MATRIX [DATA] - DATA Length - Delay         */
+/* Outputs       :  NONE                                            */
+/* Descreiption  :  Display a dynamic figure with shifting          */
+/********************************************************************/
 void HLEDMTX_voidShiftDisplay (u8 * Copy_u8Data,u8 Copy_u8DataLength,u8 Copy_u8ShiftDelay)
 {
-	u8 i = 0 ;
+	/* To aliasing avoidance */
+	Copy_u8DataLength = Copy_u8DataLength - 7 ;
 
-	while(1)
+	/* Calculate how much time to loop in while */
+	Copy_u8ShiftDelay = Copy_u8ShiftDelay / 16;
+	/* Hold the time to update it after every shift */
+	u16 Local_u16Hold = Copy_u8ShiftDelay  ;
+	
+	/* Looping through the text */
+	while(Copy_u8DataLength--)
 	{
-	   for(u8 j = 0 ; j <= Copy_u8ShiftDelay ; j++)
-	   {
-	     // Enable column 0 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[0+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL0_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 1 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[1+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL1_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 2 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[2+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL2_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 3 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[3+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL3_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 4 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[4+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL4_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 5 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[5+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL5_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 6 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[6+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL6_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-
-	     // Enable column 7 //
-	     // Disable all columns //
-	     DisableAllCols();
-	     SetRowValues(Copy_u8Data[7+i]);
-	     MGPIO_voidSetPinValue (LEDMTX_COL7_PIN , GPIO_LOW) ;
-	     // Set Delay 2.5ms as we want 50 Frame so 8*50=400 > 1/400 = 2.5ms //
-	     MSTK_voidSetBusyWait(LED_MTX_DELAY_IN_US,TIME_US);
-	   }
-	  i=i+1;
-	  if(i > Copy_u8DataLength-8)
-	  {
-		  i = 0 ;
-	  }
+		/* making delay between shifts */
+		while (Copy_u8ShiftDelay--)
+		{
+			HLEDMTX_voidDisplay(Copy_u8Data);
+		}
+		Copy_u8Data++;
+		Copy_u8ShiftDelay = Local_u16Hold;
 	}
 }
-
-
-
-
-
-
-
-
-
-void DisableAllCols (void)
-{
-	MGPIO_voidSetPinValue (LEDMTX_COL0_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL1_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL2_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL3_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL4_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL5_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL6_PIN , GPIO_HIGH) ;
-	MGPIO_voidSetPinValue (LEDMTX_COL7_PIN , GPIO_HIGH) ;
-}
-
-void SetRowValues(u8 Copy_u8Value)
+/*************************************************************************/
+/*********************************************************************/
+/* Function Name : SetRowValues                                      */
+/* Inputs        : LED MATRIX [DATA]                                 */
+/* Outputs       : NONE                                              */
+/* Descreiption  : Set Rows Value corresponding to LED MATRIX [DATA] */
+/*********************************************************************/
+static void SetRowValues(u8 Copy_u8Value)
 {
 	u8 Local_u8Bit ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 0);
-	MGPIO_voidSetPinValue (LEDMTX_ROW0_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 1);
-	MGPIO_voidSetPinValue (LEDMTX_ROW1_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 2);
-	MGPIO_voidSetPinValue (LEDMTX_ROW2_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 3);
-	MGPIO_voidSetPinValue (LEDMTX_ROW3_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 4);
-	MGPIO_voidSetPinValue (LEDMTX_ROW4_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 5);
-	MGPIO_voidSetPinValue (LEDMTX_ROW5_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 6);
-	MGPIO_voidSetPinValue (LEDMTX_ROW6_PIN , Local_u8Bit) ;
-
-	Local_u8Bit = GET_BIT(Copy_u8Value , 7);
-	MGPIO_voidSetPinValue (LEDMTX_ROW7_PIN , Local_u8Bit) ;
+	for(u8 i = 0 ; i < (LEDMTX_ROW_NUMBER * 2) ; i += 2 )
+	{
+		Local_u8Bit = GET_BIT(Copy_u8Value , i/2);
+		MGPIO_voidSetOrResetPinValue_BSRR_BRR(LEDMRX_globalRows[i],LEDMRX_globalRows[i+1],Local_u8Bit) ;
+	}
 
 }
+/*************************************************************************/

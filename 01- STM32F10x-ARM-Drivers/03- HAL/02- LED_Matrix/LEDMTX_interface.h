@@ -1,18 +1,43 @@
 /********************************************************************/
 /*  Author	 : Mohamed Maged							 	        */
-/*  Version	 : V01  												*/
-/*	Date	 : 29 September 2023                                    */
+/*  Version	 : V02  												*/
+/*	Date	 : 6 October 2023                                       */
 /*  Logs     : V01 : Initial Creation                               */
+/*             V02 : Update the whole Driver                        */
 /********************************************************************/
 #ifndef LEDMTX_INTERFACE_H
 #define LEDMTX_INTERFACE_H
 
-/* LEDMTX Delay to achieve the selected number of FPS */
-#define LED_MTX_DELAY_IN_US        (1000000 /(LEDMTX_ROW_NUMBER * LEDMTX_Frame_PER_SECOND))
 
 
-
+/********************************************************************/
+/* Function Name :  HLEDMTX_voidInit                                */
+/* Inputs        :  NONE                                            */
+/* Outputs       :  NONE                                            */
+/* Descreiption  :  Intialization of Pins [Rows - Columns]          */
+/********************************************************************/
 void HLEDMTX_voidInit (void);
+/********************************************************************/
+
+
+/********************************************************************/
+/* Function Name :  HLEDMTX_voidDisplay                             */
+/* Inputs        :  LED MATRIX [DATA]                               */
+/* Outputs       :  NONE                                            */
+/* Descreiption  :  Display a static figure                         */
+/********************************************************************/
+void HLEDMTX_voidDisplay (u8 *copy_u8Data);
+/********************************************************************/
+
+
+
+
+/********************************************************************/
+/* Function Name :  HLEDMTX_voidShiftDisplay                        */
+/* Inputs        :  LED MATRIX [DATA] - DATA Length - Delay         */
+/* Outputs       :  NONE                                            */
+/* Descreiption  :  Display a dynamic figure with shifting          */
+/********************************************************************/
 void HLEDMTX_voidShiftDisplay (u8 * Copy_u8Data,u8 Copy_u8DataLength,u8 Copy_u8ShiftDelay);
 
 
