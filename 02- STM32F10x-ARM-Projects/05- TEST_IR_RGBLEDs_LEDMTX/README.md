@@ -1,53 +1,4 @@
 # STM32F10x Testing for LED Matrix, IR Remote, and RGB LED
-**This code aims to perform a comprehensive test on an 8x8 LED Matrix with IR Remote using the STM32F10x microcontroller.**
-This Code consists of :
-**1- Hardware Abatraction Layer [HAL] :** LED MATRIX - IR REMOTE - RGB LED
-**2- Microcontroller Abstraction Layer [MCAL] :** RCC - GPIO - NVIC - AFIO - EXTI - SysTick - TIMERS    
-**3- Library Layer [LIB] :** STD TYPES - BIT MATH 
-In this code i used [IR REMOTE] for controlling on :
-# LED MATRIX : 
-1) TO TURN ON AND DISPLAY "HELLO"
-2) SPEED UP THE DISPLAYED TEXT 
-3) SLOW DOWN THE DISPLAYED TEXT
-4) DISPLAY A MAN BOUNCING A BALL
-
-# RGB LED :
-1) TURN ON/OFF GREEN LED
-2) TURN ON/OFF BLUE LED
-3) TURN ON/OFF RED LED
-
-In this code i used [RCC] for:
-1) Clock Initialization for used ports and peripherals
-
-
-In this code i used [GPIO] for:
-1) Setting the directions and the values for used ports and pins
-
-In this code i used [NVIC] for:
-1) To Enable EXTI8 for REMOTE DRIVER .
-
-In this code i used [EXTI] for:
-1) To Enable EXTI LINE 8
-2) Setting Signal Latch to Falling Edge Mode
-
-
-In this code i used [AFIO] for:
-1) Mapping EXTI8 PIN TO A8 .
-
-
-In this code i used [SysTick] for:
-1) Handling the Delay which used in LED MATRIX 
-
-In this code i used [TIMERS] => **TIMER 2** for:
-1) Handling the Delay which used in [IR REMOTE] Recieving FRAME
-
-
-
-
-
-
-
-
 
 # Table of Contents
 - Introduction
@@ -56,11 +7,62 @@ In this code i used [TIMERS] => **TIMER 2** for:
 - Connect with me
 
 # Introduction
-The STM32F10x-ARM microcontroller is a powerful and widely used microcontroller in embedded systems development. This repository aims to provide a collection of custom drivers written in C for this microcontroller, making it easier to develop applications and interact with various peripherals.
+This code aims to perform a comprehensive test on an 8x8 LED Matrix with IR Remote using the STM32F10x microcontroller.
+The code is structured as follows:
+## Hardware Abstraction Layer (HAL):
+- LED Matrix
+- IR Remote
+- RGB LED
+## Microcontroller Abstraction Layer (MCAL):
+- RCC (Reset and Clock Control)
+- GPIO (General Purpose Input/Output)
+- NVIC (Nested Vector Interrupt Controller)
+- AFIO (Alternate Function Input/Output)
+- EXTI (External Interrupt/Event Controller)
+- SysTick
+- Timers
+## Library Layer (LIB):
+- STD TYPES
+- BIT MATH
+
+## The IR Remote is utilized in this code to control the following functionalities:
+### For LED Matrix:
+1) TO TURN ON AND DISPLAY "HELLO"
+2) SPEED UP THE DISPLAYED TEXT 
+3) SLOW DOWN THE DISPLAYED TEXT
+4) DISPLAY A MAN BOUNCING A BALL
+
+### For RGB LED :
+1) TURN ON/OFF GREEN LED
+2) TURN ON/OFF BLUE LED
+3) TURN ON/OFF RED LED
+
+### The RCC is used in this code for:
+- Initializing the clock for the relevant ports and peripherals
+
+### The GPIO is used in this code for:
+- Configuring the directions and values for the used ports and pins
+
+### The NVIC is used in this code to:
+- Enable EXTI8 for the remote driver
+
+### The EXTI is used in this code to:
+- Enable EXTI LINE 8
+- Set the signal latch to Falling Edge Mode
+
+### The AFIO is used in this code for:
+- Mapping EXTI8 pin to A8
+  
+### The SysTick is used in this code to:
+- Handle the delay used in the LED Matrix
+
+### The Timers (specifically **TIMER 2**) are used in this code to:
+- Handle the delay used in receiving the IR Remote frame.
+
 
 # Testing Video
 
-[![IMAGE ALT TEXT HERE](https://github.com/Eng-Mohamed-Maged/STM32F10x-ARM-Drivers-Projects/blob/main/02-%20STM32F10x-ARM-Projects/04-%20TEST_LED_MATRIX_DRIVER/32.png)](https://www.youtube.com/watch?v=VlsqEy3nn9k)
+[![IMAGE ALT TEXT HERE](https://github.com/Eng-Mohamed-Maged/STM32F10x-ARM-Drivers-Projects/blob/main/02-%20STM32F10x-ARM-Projects/05-%20TEST_IR_RGBLEDs_LEDMTX/0.png)](https://www.youtube.com/watch?v=VlsqEy3nn9k)
 
 # Getting Started
 To get started with using these drivers in your STM32F10x-ARM project, follow these steps:
