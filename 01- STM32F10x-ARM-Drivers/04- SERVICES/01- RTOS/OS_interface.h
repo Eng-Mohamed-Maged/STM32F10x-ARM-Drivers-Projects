@@ -8,23 +8,13 @@
 #ifndef OS_INTERFACE_H
 #define OS_INTERFACE_H
 
-/*******************************************************************************/
-/* - Pre conditions :                                                          */
-/* - 	1 - Dont use STK driver in other module                                */
-/* - 	2 - STK drivers files must be included in the project                  */
-/* - 	3 - Number of tasks must be configured  ( OS_NUMBER_OF_TASKS )         */
-/* - 	4 - Clock must be selected right in STK driver to ensure right time    */
-/* - 	5 - OS_voidStart must be called before while                           */
-/* - 	6 - OS_voidDispatcher must be called in the while                      */
-/* - 	7 - Global interrupt must be active                                    */
-/*******************************************************************************/
 
 /* Task States */
 typedef enum
 {
-	OS_TASK_READY ,
+	OS_TASK_READY         = 5,
 	OS_TASK_SUSPEND
-}OS_TASK_STATES_t
+}OS_TASK_STATES_t;
 
 
 /*******************************************************************************/
@@ -46,16 +36,11 @@ void OS_voidStopScheduler(void);
 void OS_voidResumeScheduler(void);
 
 
-/*******************************************************************************/
-/* - Start the Dispatcher to call the right task                               */
-/*******************************************************************************/
-void OS_voidDispatcher(void);
-
 
 /*******************************************************************************/
 /* - To Create new task  										               */
 /*******************************************************************************/
-void OS_voidCreateTask(u8 Copy_u8ID,u16 copy_u16delay,u16 copy_u16period,void(*copy_voidFunc)(void));
+void OS_voidCreateTask(u16 Copy_u16delay,u16 Copy_u16period,void(*Copy_voidFptr)(void),u8 Copy_u8ID);
 
 
 /*******************************************************************************/

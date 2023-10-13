@@ -17,13 +17,11 @@ typedef struct
 	u16 Priodicity        		;
 	u16 FirstDelay        		;	
 	void (*Fptr) (void)   		;
-	u8 RunFlag                  ;
 }OS_TASK_t;
 
 /*******************************************************************************/
-/****************************** Private Fptrtions ******************************/
+/****************************** Private Functions ******************************/
 static void voidScheduler(void);
-static void voidGoToSleep(void);
 /*******************************************************************************/
 
 

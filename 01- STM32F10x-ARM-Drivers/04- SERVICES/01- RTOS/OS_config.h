@@ -24,7 +24,7 @@
 /*
  *	Set Tick time for RTOS		
 */
-#define  OS_TICK_TIME		        1
+#define  OS_TICK_TIME		        1000
 /*------------------------------------------------------------------------------*/
 /*
  *  Options :
