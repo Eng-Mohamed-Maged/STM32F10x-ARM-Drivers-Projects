@@ -1,11 +1,12 @@
 /*******************************************************************************/
 /*   Author    : Mohamed Maged                                                 */
-/*   Version   : V04                                                           */
-/*   Date      : 4 October 2023                                                */
+/*   Version   : V05                                                           */
+/*   Date      : 13 October 2023                                               */
 /*   Logs      : V01 : Initial Creation                                        */
 /*               V02 : Update all EXTI Driver with enum configurations         */
 /*               V03 : Warnning Fixed "#else - #endif"                         */
 /*               V04 : Fix EXTI_HANDLER {5 - 15}                               */
+/*               V05 : Fix EXTI0 - Clear Pending flag                          */
 /*******************************************************************************/
 
 #include  "STD_TYPES.h"
@@ -123,7 +124,7 @@ void EXTI0_IRQHandler(void)
 {
 	EXTI_CallBack[0]();
 	/* Clear Pending bit */
-	SET_BIT( EXTI->PR , 1 );
+	SET_BIT( EXTI->PR , 0 );
 }
 
 /*************************  ISR 1 ***************************/
