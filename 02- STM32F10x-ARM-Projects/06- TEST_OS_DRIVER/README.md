@@ -10,19 +10,19 @@
 This code aims to perform a comprehensive test on RTOS Driver using the STM32F10x microcontroller.
 The code is structured as follows:
 ## Three Tasks:
-- 1) Task1 for blinking [Green LED] every 1000 ms
-- 2) Task2 for blinking [Yellow LED] every 2000 ms
-- 3) Task3 for blinking [Red LED] every 4000 ms
+- Task1 for blinking [Green LED] every 1000 ms
+- Task2 for blinking [Yellow LED] every 2000 ms
+- Task3 for blinking [Red LED] every 4000 ms
 
 ## Three Push Buttons:
-- 1) For Suspending Task1 [Green LED]
-- 2) For Resuming Task1 [Green LED]
-- 3) For Deleting Task1 [Green LED]
+- For Suspending Task1 [Green LED]
+- For Resuming Task1 [Green LED]
+- For Deleting Task1 [Green LED]
 
 
 # Testing Video
 
-[![IMAGE ALT TEXT HERE](https://github.com/Eng-Mohamed-Maged/STM32F10x-ARM-Drivers-Projects/blob/main/02-%20STM32F10x-ARM-Projects/05-%20TEST_IR_RGBLEDs_LEDMTX/0.png)](https://www.youtube.com/watch?v=VlsqEy3nn9k)
+[![IMAGE ALT TEXT HERE](https://github.com/Eng-Mohamed-Maged/STM32F10x-ARM-Drivers-Projects/blob/main/02-%20STM32F10x-ARM-Projects/06-%20TEST_OS_DRIVER/0.png)](https://www.youtube.com/watch?v=D3m6agWu9Dk)
 
 # Getting Started
 To get started with using these drivers in your STM32F10x-ARM project, follow these steps:
