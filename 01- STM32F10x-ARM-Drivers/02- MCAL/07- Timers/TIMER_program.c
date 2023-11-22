@@ -1,10 +1,11 @@
 /****************************************************************************/
 /* Author      : Mohamed Maged                                              */
-/* Version     : V02                                                        */
-/* Date        : 5 October 2023                                             */
+/* Version     : V03                                                        */
+/* Date        : 22 November 2023                                           */
 /* Logs        : V01 : Initial Creation                                     */
 /*               V02 : Adding [Function to get Elapsed Time ]               */
 /*                     Adding [Function to Stop/Start Timer ]               */
+/*               V03 : Fix Calculations Errors in BusyWaitFunction          */
 /****************************************************************************/
 
 /* Library includes */
@@ -20,7 +21,7 @@
 extern const TIMER_config_t configTable[TIMER_NUMBER];
 void (* callBackFunc[TIMER_NUMBER])(void);
 
-void TIMER_voidInit (void)
+void MTIMER_voidInit (void)
 {
 	for (TIMER_channels_t i = 0 ; i < MAX_TIMERS ; i++)
 	{
@@ -70,7 +71,7 @@ void TIMER_voidInit (void)
 			/* Configure Prescaler */
 			TIMER[i]->PSC =  (configTable[i].u16Prescaler - 1 ) ;
 
-			/* Configure Preload register to Maximum value */
+			/* Configure Preload register to Maximum value [UP-COUNTER] */
 			TIMER[i]->ARR = 0xFFFF ;
 
 
@@ -82,37 +83,58 @@ void TIMER_voidInit (void)
 
 /****************** Timer basic functions **********************/
 
-void TIMER_voidSetBusyWait (TIMER_channels_t copy_channel ,u32 copy_u32Time, TIME_UNIT_t copy_TimeUnit)
+void MTIMER_voidSetBusyWait (TIMER_channels_t copy_channel ,u32 copy_u32Time, TIME_UNIT_t copy_TimeUnit)
 {
 	/* Stop timer */
 	CLR_BIT (TIMER[copy_channel]->CR1, 0 );
 	
 	/* Clear Interrupt flag */
 	CLR_BIT (TIMER[copy_channel]->SR , 0);
+
+	/* For Long Time */
+	u32 Local_u32RemainingTime = 0;
+
+	u32 loacl_u32Hold = 0 ;
 	
-	u16 loacl_u16Hold = 0 ;
-	
+	/* To clear the current value */
+	TIMER[copy_channel]->CNT = 0xFFFF ;
+
+
 	/* Configure interval */
 	switch(copy_TimeUnit)
 	{
-		case TIMER_S :
-			loacl_u16Hold =  (configTable[copy_channel].u32ClkSource) * copy_u32Time ;
-		break;
-		
 		case TIMER_MS :
-			loacl_u16Hold =  (configTable[copy_channel].u32ClkSource / 1000 ) * copy_u32Time ;
-		break;
+			loacl_u32Hold =  (((configTable[copy_channel].u32ClkSource/configTable[copy_channel].u16Prescaler)/1000) * copy_u32Time) ;
+			/* Check if the target time bigger than [0xFFFF] */
+			if(loacl_u32Hold > 0xFFFF)
+			{
+				TIMER[copy_channel]->ARR  = 0xFFFF ;
+				Local_u32RemainingTime = ((loacl_u32Hold - 0xFFFF)/((configTable[copy_channel].u32ClkSource/configTable[copy_channel].u16Prescaler)/1000));
+			}
+			else
+			{
+//				TIMER[copy_channel]->ARR  = 0xFFFF - loacl_u32Hold ;
+				TIMER[copy_channel]->ARR  = loacl_u32Hold ;
+
+			}		break;
 
 		case TIMER_US :
-			loacl_u16Hold =  (configTable[copy_channel].u32ClkSource / 1000000 ) * copy_u32Time ;
-		break;
+			loacl_u32Hold =  (((configTable[copy_channel].u32ClkSource/configTable[copy_channel].u16Prescaler)/1000000) * copy_u32Time) ;
+
+			/* Check if the target time bigger than [0xFFFF] */
+			if(loacl_u32Hold > 0xFFFF)
+			{
+				TIMER[copy_channel]->ARR  = 0xFFFF ;
+				Local_u32RemainingTime = ((loacl_u32Hold - 0xFFFF)/((configTable[copy_channel].u32ClkSource/configTable[copy_channel].u16Prescaler)/1000000));
+			}
+			else
+			{
+//				TIMER[copy_channel]->ARR  = 0xFFFF - loacl_u32Hold ;
+				TIMER[copy_channel]->ARR  = loacl_u32Hold ;
+			}		break;
 
 		default : break;
 	}
-
-	loacl_u16Hold =  loacl_u16Hold / configTable[copy_channel].u16Prescaler;
-	TIMER[copy_channel]->ARR = loacl_u16Hold ;
-	TIMER[copy_channel]->CNT = 0x0000 ;
 
 	/* Start timer */
 	SET_BIT (TIMER[copy_channel]->CR1, 0 );
@@ -120,39 +142,40 @@ void TIMER_voidSetBusyWait (TIMER_channels_t copy_channel ,u32 copy_u32Time, TIM
 	/* Wait for flag */
 	while (!(GET_BIT (TIMER[copy_channel]->SR, 0)));
 	
+	/* Count the remaining time */
+	if(Local_u32RemainingTime != 0)
+	{
+		MTIMER_voidSetBusyWait(copy_channel,Local_u32RemainingTime,copy_TimeUnit);
+	}
 	/* Stop timer */
 	CLR_BIT (TIMER[copy_channel]->CR1, 0 );
 } 
 
 
-void TIMER_voidSetPeriodic (TIMER_channels_t copy_channel ,u32 copy_u32Time ,TIME_UNIT_t copy_TimeUnit , void (*func)(void))
+void MTIMER_voidSetPeriodic (TIMER_channels_t copy_channel ,u32 copy_u32Time ,TIME_UNIT_t copy_TimeUnit , void (*func)(void))
 {
 
 	/* Stop timer */
 	CLR_BIT (TIMER[copy_channel]->CR1, 0 );
 	
-	u16 loacl_u16Hold = 0 ;
+	u32 loacl_u32Hold = 0 ;
 
 	/* Configure interval */
 	switch(copy_TimeUnit)
 	{
-		case TIMER_S :
-			loacl_u16Hold =  (configTable[copy_channel].u32ClkSource) * copy_u32Time ;
-		break;
-		
+
 		case TIMER_MS :
-			loacl_u16Hold =  (configTable[copy_channel].u32ClkSource / 1000 ) * copy_u32Time ;
+			loacl_u32Hold =  (((configTable[copy_channel].u32ClkSource/configTable[copy_channel].u16Prescaler)/1000) * copy_u32Time) ;
 		break;
 
 		case TIMER_US :
-			loacl_u16Hold =  (configTable[copy_channel].u32ClkSource / 1000000 ) * copy_u32Time ;
+			loacl_u32Hold =  (((configTable[copy_channel].u32ClkSource/configTable[copy_channel].u16Prescaler)/1000000) * copy_u32Time) ;
 		break;
 
 		default : break;
 	}
 	
-	loacl_u16Hold =  loacl_u16Hold / configTable[copy_channel].u16Prescaler;
-	TIMER[copy_channel]->ARR = loacl_u16Hold ;
+	TIMER[copy_channel]->ARR = loacl_u32Hold ;
 
 
 	/* Set call back function */
@@ -166,23 +189,19 @@ void TIMER_voidSetPeriodic (TIMER_channels_t copy_channel ,u32 copy_u32Time ,TIM
 }
 
 
-void TIMER_voidDisableOverFlowInterrupt(TIMER_channels_t copy_channel )
+void MTIMER_voidDisableOverFlowInterrupt(TIMER_channels_t copy_channel )
 {
 	/* Disable interrupt */
 	CLR_BIT(TIMER[copy_channel]->DIER, 0 );
 }
 
-u32 TIMER_u32GetElapsedTime(TIMER_channels_t copy_channel,TIME_UNIT_t copy_TimeUnit)
+u32 MTIMER_u32GetElapsedTime(TIMER_channels_t copy_channel,TIME_UNIT_t copy_TimeUnit)
 {
 	volatile u16 Local_u16ValueTimer = TIMER[copy_channel]->CNT ;
 	volatile u32 Local_u32ElapsedTime = 0 ;
 
 	switch(copy_TimeUnit)
 	{
-		case TIMER_S :
-			Local_u32ElapsedTime = Local_u16ValueTimer / (configTable[copy_channel].u32ClkSource / configTable[copy_channel].u16Prescaler ) ;
-		break;
-
 		case TIMER_MS :
 			Local_u32ElapsedTime = Local_u16ValueTimer / ((configTable[copy_channel].u32ClkSource / configTable[copy_channel].u16Prescaler )/ 1000) ;
 		break;
@@ -197,7 +216,7 @@ u32 TIMER_u32GetElapsedTime(TIMER_channels_t copy_channel,TIME_UNIT_t copy_TimeU
 	return Local_u32ElapsedTime;
 }
 
-void TIMER_voidStart(TIMER_channels_t copy_channel)
+void MTIMER_voidStart(TIMER_channels_t copy_channel)
 {
 	/* Clear Counter */
 	TIMER[copy_channel]->CNT  =  0x0000 ;
@@ -210,7 +229,7 @@ void TIMER_voidStart(TIMER_channels_t copy_channel)
 }
 
 
-void TIMER_voidStop(TIMER_channels_t copy_channel)
+void MTIMER_voidStop(TIMER_channels_t copy_channel)
 {
 	/* Start timer */
 	CLR_BIT (TIMER[copy_channel]->CR1, 0 );

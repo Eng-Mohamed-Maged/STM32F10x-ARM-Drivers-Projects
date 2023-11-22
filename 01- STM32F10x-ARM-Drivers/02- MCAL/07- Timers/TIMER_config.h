@@ -1,10 +1,11 @@
 /****************************************************************************/
 /* Author      : Mohamed Maged                                              */
-/* Version     : V02                                                        */
-/* Date        : 5 October 2023                                             */
+/* Version     : V03                                                        */
+/* Date        : 22 November 2023                                           */
 /* Logs        : V01 : Initial Creation                                     */
 /*               V02 : Adding [Function to get Elapsed Time ]               */
 /*                     Adding [Function to Stop/Start Timer ]               */
+/*               V03 : Fix Calculations Errors in BusyWaitFunction          */
 /****************************************************************************/
 #ifndef TIMER_CONFIG_H
 #define TIMER_CONFIG_H

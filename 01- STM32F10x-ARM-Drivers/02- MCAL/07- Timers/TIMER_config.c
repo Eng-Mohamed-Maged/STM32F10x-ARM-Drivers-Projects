@@ -1,10 +1,11 @@
 /****************************************************************************/
 /* Author      : Mohamed Maged                                              */
-/* Version     : V02                                                        */
-/* Date        : 5 October 2023                                             */
+/* Version     : V03                                                        */
+/* Date        : 22 November 2023                                           */
 /* Logs        : V01 : Initial Creation                                     */
 /*               V02 : Adding [Function to get Elapsed Time ]               */
 /*                     Adding [Function to Stop/Start Timer ]               */
+/*               V03 : Fix Calculations Errors in BusyWaitFunction          */
 /****************************************************************************/
 
 #include "STD_TYPES.h"
@@ -25,7 +26,7 @@
  *    EX: Clock = 8MHZ - Prescaler = 8 so tick time = [1 / 1MHZ] = 1us
  *        The Maximum overflow time = 1us * 65536 = 65536 us
  *
- * TODO: Implementation for DOWN_COUNTER
+ * TODO: Implementation for UP_COUNTER
  */
 
 
@@ -35,8 +36,8 @@
 const TIMER_config_t configTable[TIMER_NUMBER] = {
 //   Timer      Timer        Timer          Interrupt    CLK         Prescaler       Interval    AutoReload
 //   channel	enable       mode           enable       source                       in US       Enable
-	{TIM1    ,  DISABLE     , UP_COUNTER    , DISABLE    , APB2_CLK    , 8              , 0    ,  DISABLE    } ,
-	{TIM2    ,  ENABLE      , UP_COUNTER    , DISABLE    , APB1_CLK    , 8              , 0    ,  ENABLE     } ,
-	{TIM3    ,  DISABLE     , UP_COUNTER    , DISABLE    , APB1_CLK    , 8              , 0    ,  ENABLE     } ,
-	{TIM4    ,  DISABLE     , UP_COUNTER    , DISABLE    , APB1_CLK    , 8              , 0    ,  DISABLE    }
+	{TIM1    ,  ENABLE     , DOWN_COUNTER    , DISABLE    , APB2_CLK    , 8              , 0    ,  ENABLE    } ,
+	{TIM2    ,  ENABLE     , DOWN_COUNTER    , DISABLE    , APB1_CLK    , 8              , 0    ,  ENABLE    } ,
+	{TIM3    ,  ENABLE     , DOWN_COUNTER    , DISABLE    , APB1_CLK    , 8              , 0    ,  ENABLE    } ,
+	{TIM4    ,  ENABLE     , DOWN_COUNTER    , DISABLE    , APB1_CLK    , 8              , 0    ,  ENABLE    }
 };

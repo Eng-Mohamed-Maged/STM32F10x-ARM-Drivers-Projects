@@ -1,10 +1,11 @@
 /****************************************************************************/
 /* Author      : Mohamed Maged                                              */
-/* Version     : V02                                                        */
-/* Date        : 5 October 2023                                             */
+/* Version     : V03                                                        */
+/* Date        : 22 November 2023                                           */
 /* Logs        : V01 : Initial Creation                                     */
 /*               V02 : Adding [Function to get Elapsed Time ]               */
 /*                     Adding [Function to Stop/Start Timer ]               */
+/*               V03 : Fix Calculations Errors in BusyWaitFunction          */
 /****************************************************************************/
 #ifndef TIMER_INTERFACE_H
 #define TIMER_INTERFACE_H
@@ -20,7 +21,6 @@ typedef enum {
 }TIMER_channels_t;
 
 typedef enum {
-	TIMER_S  ,
 	TIMER_MS ,
 	TIMER_US
 }TIME_UNIT_t;
@@ -37,7 +37,7 @@ typedef enum {
 					the correspending interrupt from NVIC
   */				
 /************************************************************/
-void TIMER_voidInit (void);
+void MTIMER_voidInit (void);
 
 /***********************************************************/
  /* Function Name  : TIMER_voidSetBusyWait 
@@ -48,7 +48,7 @@ void TIMER_voidInit (void);
   * Pre-conditions : Timer's interrupt must be disabled 
   */				
 /************************************************************/
-void TIMER_voidSetBusyWait (TIMER_channels_t copy_channel ,u32 copy_u32Time, TIME_UNIT_t copy_TimeUnit);
+void MTIMER_voidSetBusyWait (TIMER_channels_t copy_channel ,u32 copy_u32Time, TIME_UNIT_t copy_TimeUnit);
 
 
 /***********************************************************/
@@ -60,7 +60,7 @@ void TIMER_voidSetBusyWait (TIMER_channels_t copy_channel ,u32 copy_u32Time, TIM
   * Pre-conditions :  
   */				
 /************************************************************/
-void TIMER_voidSetPeriodic (TIMER_channels_t copy_channel ,u32 copy_u32Time ,TIME_UNIT_t copy_TimeUnit , void (*func)(void));
+void MTIMER_voidSetPeriodic (TIMER_channels_t copy_channel ,u32 copy_u32Time ,TIME_UNIT_t copy_TimeUnit , void (*func)(void));
 /***********************************************************/
  /* Function Name  : TIMER_voidDisableOverFlowInterrupt 
   * Function Type  :   
@@ -70,7 +70,7 @@ void TIMER_voidSetPeriodic (TIMER_channels_t copy_channel ,u32 copy_u32Time ,TIM
   * Pre-conditions :  
   */				
 /************************************************************/
-void TIMER_voidDisableOverFlowInterrupt(TIMER_channels_t copy_channel );
+void MTIMER_voidDisableOverFlowInterrupt(TIMER_channels_t copy_channel );
 
 
 /***********************************************************/
@@ -82,7 +82,7 @@ void TIMER_voidDisableOverFlowInterrupt(TIMER_channels_t copy_channel );
   * Pre-conditions :
   */
 /************************************************************/
-u32 TIMER_u32GetElapsedTime(TIMER_channels_t copy_channel,TIME_UNIT_t copy_TimeUnit);
+u32 MTIMER_u32GetElapsedTime(TIMER_channels_t copy_channel,TIME_UNIT_t copy_TimeUnit);
 
 
 /***********************************************************/
@@ -94,7 +94,7 @@ u32 TIMER_u32GetElapsedTime(TIMER_channels_t copy_channel,TIME_UNIT_t copy_TimeU
   * Pre-conditions :
   */
 /************************************************************/
-void TIMER_voidStart(TIMER_channels_t copy_channel);
+void MTIMER_voidStart(TIMER_channels_t copy_channel);
 
 
 
@@ -107,7 +107,7 @@ void TIMER_voidStart(TIMER_channels_t copy_channel);
   * Pre-conditions :
   */
 /************************************************************/
-void TIMER_voidStop(TIMER_channels_t copy_channel);
+void MTIMER_voidStop(TIMER_channels_t copy_channel);
 
 
 #endif
